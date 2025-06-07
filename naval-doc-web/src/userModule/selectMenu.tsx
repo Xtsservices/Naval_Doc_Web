@@ -88,7 +88,7 @@ const SelectMenu: React.FC = () => {
       console.log("Canteen ID:", canteenId);
       try {
         const res = await axios.get(
-          `http://192.168.1.24:3002/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
+          `https://server.welfarecanteen.in/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
           {
             headers: {
               Authorization: token,
@@ -96,7 +96,6 @@ const SelectMenu: React.FC = () => {
           }
         );
         setMenus(res.data.data || {});
-        
       } catch (e) {
         setMenus({});
       }

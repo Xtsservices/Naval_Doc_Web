@@ -12,7 +12,7 @@ interface Canteen {
   canteenImage: string;
 }
 
-const API_URL = "http://192.168.1.24:3002/api/user/getAllCanteens";
+const API_URL = "https://server.welfarecanteen.in/api/user/getAllCanteens";
 
 const UserSelectCanteen: React.FC = () => {
   const [canteens, setCanteens] = useState<Canteen[]>([]);

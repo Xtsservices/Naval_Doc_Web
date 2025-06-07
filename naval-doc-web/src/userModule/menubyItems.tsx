@@ -11,7 +11,7 @@ interface MenuItem {
 const getMenuId = () => localStorage.getItem("menuId") || "";
 
 const fetchMenuItems = async (menuId: string): Promise<MenuItem[]> => {
-    const res = await fetch(`http://192.168.1.24:3002/api/menu/getMenuById?id=${menuId}`);
+    const res = await fetch(`https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`);
     const data = await res.json();
     // Adjust this mapping based on your API response structure
     return data.items || [];
