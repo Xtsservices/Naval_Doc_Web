@@ -30,15 +30,14 @@ import Terms from "./homepage/components/Terms";
 import Privacy from "./homepage/components/Privacy";
 import AboutUs from "./homepage/components/About us";
 import Overview from "./homepage/components/Overview";
+import UserSelectCanteen from "./userModule/userSelectCanteen";
+import SelectMenu from "./userModule/selectMenu";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/paymentResponse"
-          element={<PaymentResponse />} 
-        />
+        <Route path="/paymentResponse" element={<PaymentResponse />} />
         {/* Protected Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/Login" element={<LoginScreen />} />
@@ -78,6 +77,10 @@ const App = () => {
             />
           </Route>
         </Route>
+        <Route path="/user/select-canteen" element={<UserSelectCanteen />} />
+        <Route path="/user/select-menu" element={<SelectMenu />} />
+
+        {/* Admin Routes */}
 
         {/* Add routes for Terms and Privacy */}
         <Route path="/terms" element={<Terms />} />

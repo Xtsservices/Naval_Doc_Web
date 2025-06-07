@@ -34,7 +34,7 @@ const LoginScreen: React.FC = () => {
       const mobileValue = form.getFieldValue("mobile");
 
       // Only allow login for specific numbers
-      const allowedNumbers = ["7093081518", "9392392143"];
+      const allowedNumbers = ["7093081518", "9392392143", "9052519059"];
       if (!allowedNumbers.includes(mobileValue)) {
         form.setFields([
           {
@@ -136,6 +136,17 @@ const LoginScreen: React.FC = () => {
           mobile: form.getFieldValue("mobile"),
           otp: form.getFieldValue("otp"),
         });
+
+        console.log("Response from server:", response.data.data.mobile);
+
+        if (response.data.data.mobile == "9052519059") {
+          const token = response?.data?.token;
+          localStorage.setItem("Token", token);
+          console.log("Redirecting to user select canteen");
+          console.log("Token set in localStorage", token);
+          navigate("/user/select-canteen");
+          return;
+        }
 
         if (
           response.status === 200 &&
