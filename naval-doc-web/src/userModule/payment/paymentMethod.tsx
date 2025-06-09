@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import UserHeader from "../userComponents/UserHeader";
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
+import UserHeader from '../userComponents/UserHeader';
 
 // Type definitions
 interface PaymentData {
@@ -40,15 +41,17 @@ interface ApiResponse {
 }
 
 interface PaymentMethodProps {
-  navigation?: any; // You can replace with proper navigation type if using React Router
+  // Remove navigation prop since we'll use useNavigate hook
 }
 
 type PaymentMethodType = "online" | "cash" | "";
 
 const API_URL = "http://192.168.1.12:3002/api/order/placeOrder";
 
-const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>("");
+const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
+  const navigate = useNavigate(); // Add this hook
+  
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(
     null
@@ -212,6 +215,11 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
 
   const handlePaymentOptionClick = (method: PaymentMethodType): void => {
     setSelectedMethod(method);
+  };
+
+  // Handle wallet navigation
+  const handleWalletClick = (): void => {
+    navigate('/wallet'); // Use navigate instead of navigation
   };
 
   console.log("Current state:", {
@@ -524,7 +532,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
         }
       `}</style>
 
-      <UserHeader headerText={"Payment Method"} />
+      <UserHeader headerText={"Payment Method"}/>
 
       {/* WebView/Iframe for Online Payment - Full Screen when active */}
       {showWebView && paymentLink ? (

@@ -9,7 +9,7 @@ import FinanceDB from "./modules/finance/dashboard";
 import InventoryDB from "./modules/inventory/dashboard";
 import Menu from "./modules/menu/menu";
 import Profile from "./modules/profile/profile";
-import Wallet from "./modules/wallet/wallet";
+// import Wallet from "./modules/wallet/wallet";
 import Billing from "./modules/billing";
 import Notifications from "./modules/notifications/notifications";
 import Cart from "./modules/cart/cart";
@@ -36,6 +36,7 @@ import MenuByItems from "./userModule/menu/menubyItems";
 import MyCart from "./userModule/cart/myCart";
 import PaymentMethod from "./userModule/payment/paymentMethod";
 import MyOrders from "./userModule/orders/MyOrders";
+import Wallet from "./userModule/wallet/wallet";
 const App = () => {
   return (
     <Router>
@@ -52,7 +53,7 @@ const App = () => {
             <Route path="/inventory-management" element={<InventoryDB />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/wallet" element={<Wallet />} />
+            {/* <Route path="/wallet" element={<Wallet />} /> */}
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/admin" element={<AdminDB />} />
@@ -88,6 +89,7 @@ const App = () => {
         <Route path="/user/myCart" element={<MyCart />} />
         <Route path="/user/paymentMethod" element={<PaymentMethod />} />
         <Route path="/user/orders" element={<MyOrders />} />
+        <Route path="/user/wallet" element={<Wallet />} />
         
 
       
