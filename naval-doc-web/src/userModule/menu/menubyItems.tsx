@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CartData, CartItemsState } from "../userModuleTypes/cartTypes";
 import { addItemToCart, fetchCartData, findCartItemByItemId, removeCartItem, updateCartItemQuantity } from "../service/cartHelpers";
+import axios from "axios";
 
 interface Pricing {
   id: number;
@@ -117,76 +118,52 @@ const navigate = useNavigate();
       setUpdateLoading(null);
     }
   };
-
-  // console.log(cartUpdated, 'cartUpdated---menuItemsByMenuIdScreenNew');
-
-  // Decrement quantity
-  const decreaseQuantity = async (item: MenuItem) => {
+  
+    const decreaseQuantity = async (cartItem: MenuItem) => {
     try {
-      setUpdateLoading(String(item.id));
-
-      const itemId = item.item.id;
+      // Add item ID to updating state
+          const itemId = cartItem.item.id;
       const itemKey = String(itemId);
-
-      // Check if item exists in cart
-      if (!cartItems[itemKey]) {
-        setUpdateLoading(null);
-        return;
-      }
-
       const currentQty = cartItems[itemKey].quantity;
-      const minQty = Number(item.minQuantity) || 1;
-      const cartItemId = cartItems[itemKey].cartItemId;
+      const body = {
+        cartItemId: cartItem.item?.id,
+        quantity: currentQty-1,
+        cartId: cartData?.id,
+      };
 
-      if (currentQty <= minQty) {
-        console.log('Removing item from cart',currentQty,minQty);
-        // Remove item from cart
-        await removeCartItem(cartData?.id || 0, cartItemId);
+      console.log("Request body:", body);
+      const token = localStorage.getItem("Token");
+      const API_BASE_URL = "http://192.168.1.12:3002/api";
+      await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      });
+ // Refresh cart data
+      const updatedCartData = await fetchCartData();
+      setCartData(updatedCartData);
 
-        // Refresh cart data
-        const updatedCartData = await fetchCartData();
-        setCartData(updatedCartData);
-
-        // Update cart items state
-        setCartItems(prev => {
-          const updated = {...prev};
-          delete updated[itemKey];
-          return updated;
-        });
-      } else {
-        // Decrease quantity
-        const newQty = currentQty - 1;
-        console.log('Removing item from cart newQty',newQty);
-
-
-        await updateCartItemQuantity(cartData?.id || 0, cartItemId, newQty);
-
-        // Refresh cart data
-        const updatedCartData = await fetchCartData();
-        setCartData(updatedCartData);
-
-        // Update cart items state
-        setCartItems(prev => ({
-          ...prev,
-          [itemKey]: {
-            ...prev[itemKey],
-            quantity: newQty,
-          },
-        }));
-      }
+      // Update cart items state
+      setCartItems(prev => ({
+        ...prev,
+        [itemKey]: {
+          ...prev[itemKey],
+          quantity: currentQty-1,
+        },
+      }));
 
       setUpdateLoading(null);
     } catch (err) {
-      setError('Failed to update quantity');
-      console.error('Error updating quantity:', err);
-      setUpdateLoading(null);
-    }
+      setError("Failed to update cart item");
+      console.error("Error updating cart item:", err);
+    } 
   };
 
   const fetchMenuItems = async () => {
     try {
       const res = await fetch(
-        `https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`,
+        `http://192.168.1.12:3002/api/menu/getMenuById?id=${menuId}`,
         {
           headers: {
             Authorization: token,

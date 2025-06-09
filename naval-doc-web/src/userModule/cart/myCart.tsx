@@ -50,7 +50,7 @@ const MyCart = () => {
 
       console.log("Request body:", body);
       const token = localStorage.getItem("Token");
-      const API_BASE_URL = "https://server.welfarecanteen.in/api";
+      const API_BASE_URL = "http://192.168.1.12:3002/api";
       await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const MyCart = () => {
       setUpdatingItems((prev) => prev.filter((id) => id !== cartItem.id));
     }
   };
-
+console.log("cartDatadisplay",cartData)
   const handleRemoveItem = async (item: any) => {
     console.log(item, "itemmm");
 
@@ -224,7 +224,7 @@ const MyCart = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: 16, fontWeight: 600, color: '#222', margin: 0 }}>{item.item.name}</p>
               <button onClick={() => handleRemoveItem(item)} style={{ backgroundColor: '#ffeded', borderRadius: 12, padding: 4, border: 'none' }}>
-                <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>✕</span>
+                <span style={{ color: '#ff4d4d', fontWeight: 'bold' }}>✕====</span>
               </button>
             </div>
 

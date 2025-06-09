@@ -34,7 +34,7 @@ const PaymentResponse = () => {
       return;
     }
 
-    fetch("https://server.welfarecanteen.in/api/order/CashfreePaymentLinkDetails", {
+    fetch("http://192.168.1.12:3002/api/order/CashfreePaymentLinkDetails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
