@@ -170,7 +170,7 @@ const MenuByItems: React.FC = () => {
   const fetchMenuItems = async () => {
     try {
       const res = await fetch(
-        `https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`,
+        `http://192.168.1.12:3002/api/menu/getMenuById?id=${menuId}`,
         {
           headers: {
             Authorization: token,
@@ -352,7 +352,6 @@ const MenuByItems: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    padding: "16px 0",
     background: "#f7f8fa",
     minHeight: "100vh",
     fontFamily: "sans-serif",

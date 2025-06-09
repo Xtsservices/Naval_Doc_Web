@@ -24,6 +24,7 @@ const PaymentResponse = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
+    console.log("searchParams", searchParams);
 
   useEffect(() => {
     const linkId = searchParams.get("link_id");
@@ -33,8 +34,8 @@ const PaymentResponse = () => {
       setLoading(false);
       return;
     }
-
-    fetch("https://server.welfarecanteen.in/api/order/CashfreePaymentLinkDetails", {
+ console.log("/user/orders======start======",10)
+    fetch("http://192.168.1.12:3002/api/order/CashfreePaymentLinkDetails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,6 +45,7 @@ const PaymentResponse = () => {
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch payment details");
         const data = await res.json();
+        console.log("/user/orders============",data)
         setPayment(data.data?.payment);
       })
       .catch((err) => setError(err.message))

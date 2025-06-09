@@ -44,16 +44,18 @@ interface PaymentMethodProps {
   // Remove navigation prop since we'll use useNavigate hook
 }
 
-type PaymentMethodType = 'online' | 'cash' | '';
+type PaymentMethodType = "online" | "cash" | "";
 
-const API_URL = 'https://server.welfarecanteen.in/api/order/placeOrder';
+const API_URL = "http://192.168.1.12:3002/api/order/placeOrder";
 
 const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
   const navigate = useNavigate(); // Add this hook
   
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null);
+  const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(
+    null
+  );
   const [showOrderDetails, setShowOrderDetails] = useState<boolean>(false);
   const [paymentLink, setPaymentLink] = useState<string | null>(null);
   const [showWebView, setShowWebView] = useState<boolean>(false);
@@ -62,32 +64,32 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
   // Place order and get payment link or order details
   const handlePayment = useCallback(async (): Promise<void> => {
     if (!selectedMethod) {
-      alert('Please select a payment method');
+      alert("Please select a payment method");
       return;
     }
     setLoading(true);
     try {
-      const token = localStorage.getItem('Token');
+      const token = localStorage.getItem("Token");
       if (!token) {
-        alert('Error: No token found');
+        alert("Error: No token found");
         setLoading(false);
         return;
       }
-      
+
       const response = await fetch(API_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           authorization: token,
         },
         body: JSON.stringify({ paymentMethod: selectedMethod }),
       });
-      
+
       const data: ApiResponse = await response.json();
 
-      console.log('Full API Response:', data.data?.paymentlink);
+      console.log("Full API Response========:", data);
 
-      if (response.ok && data) {
+      if (response.ok && data.data?.paymentlink) {
         setOrderResponse(data);
 
         // Check for payment link with different possible property names
@@ -97,32 +99,36 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
           data.payment_link ||
           data.link;
 
-        console.log('Possible Payment Link:', possiblePaymentLink);
+        console.log("Possible Payment Link:", possiblePaymentLink);
 
-        if (selectedMethod === 'online' && possiblePaymentLink) {
-          console.log('Payment Link Found:', possiblePaymentLink);
+        if (selectedMethod === "online" && possiblePaymentLink) {
+          console.log("Payment Link Found:", possiblePaymentLink);
           setPaymentLink(possiblePaymentLink);
           setShowOrderDetails(false);
           setTimeout(() => {
             setShowWebView(true);
           }, 100);
-        } else if (selectedMethod === 'online' && !possiblePaymentLink) {
-          console.log('No payment link found in response for online payment');
-          alert('Error: Payment link not received from server');
+        } else if (selectedMethod === "online" && !possiblePaymentLink) {
+          console.log("No payment link found in response for online payment");
+          alert("Error: Payment link not received from server");
           setShowOrderDetails(true);
         } else {
           setShowOrderDetails(true);
-          if (selectedMethod === 'cash') {
-            alert('Order Placed Successfully');
+          if (selectedMethod === "cash") {
+            alert("Order Placed Successfully");
           }
         }
       } else {
-        console.log('API Error Response:', data);
-        alert(`Payment Failed: ${data.message || 'Please try again.'}`);
+        console.log("API Error Response:", data);
+        if (!data?.data?.paymentlink) {
+          alert(`Something Went Wrong! Please try again.`);
+          return;
+        }
+        alert(`Payment Failed: ${data.message || "Please try again."}`);
       }
     } catch (error) {
-      console.error('Payment error:', error);
-      alert('Error: Could not process payment.');
+      console.error("Payment error:", error);
+      alert("Error: Could not process payment.");
     } finally {
       setLoading(false);
     }
@@ -132,22 +138,22 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
   const fetchOrderDetails = useCallback(async (): Promise<void> => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('authorization');
+      const token = localStorage.getItem("authorization");
       if (!token) {
-        alert('Error: No token found');
+        alert("Error: No token found");
         setLoading(false);
         return;
       }
-      
+
       const response = await fetch(API_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           authorization: token,
         },
-        body: JSON.stringify({ paymentMethod: 'online' }),
+        body: JSON.stringify({ paymentMethod: "online" }),
       });
-      
+
       const data: ApiResponse = await response.json();
       if (response.ok && data) {
         setOrderResponse(data);
@@ -155,12 +161,12 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         setShowWebView(false);
         setPaymentLink(null);
       } else {
-        alert('Failed: Could not fetch order details.');
+        alert("Failed: Could not fetch order details.");
       }
-      console.log('Order Response after payment:', data);
+      console.log("Order Response after payment:", data);
     } catch (error) {
-      console.error('Fetch order details error:', error);
-      alert('Error: Could not fetch order details.');
+      console.error("Fetch order details error:", error);
+      alert("Error: Could not fetch order details.");
     } finally {
       setLoading(false);
     }
@@ -169,17 +175,17 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
   const saveQrToGallery = async (): Promise<void> => {
     try {
       if (orderResponse?.qrCode) {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = orderResponse.qrCode;
         link.download = `qr-code-${orderResponse.id}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        alert('Success: QR code downloaded!');
+        alert("Success: QR code downloaded!");
       }
     } catch (error) {
-      console.error('Save QR error:', error);
-      alert('Error: Failed to download QR code');
+      console.error("Save QR error:", error);
+      alert("Error: Failed to download QR code");
     }
   };
 
@@ -192,7 +198,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
   }, [selectedMethod]);
 
   const handleBackFromWebView = (): void => {
-    console.log('Back button pressed in WebView');
+    console.log("Back button pressed in WebView");
     setShowWebView(false);
     setPaymentLink(null);
     if (orderResponse) {
@@ -202,8 +208,8 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
 
   // Debug function to test iframe directly
   const testWebView = (): void => {
-    console.log('Testing iframe with google.com');
-    setPaymentLink('https://google.com');
+    console.log("Testing iframe with google.com");
+    setPaymentLink("https://google.com");
     setShowWebView(true);
   };
 
@@ -216,7 +222,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
     navigate('/wallet'); // Use navigate instead of navigation
   };
 
-  console.log('Current state:', {
+  console.log("Current state:", {
     showWebView,
     paymentLink,
     showOrderDetails,
@@ -552,34 +558,15 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         </div>
       ) : (
         <div className="content-area">
-          <div className="main-header">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/thumb/4/4d/Indian_Navy_crest.svg/1200px-Indian_Navy_crest.svg.png"
-              alt="Indian Navy Crest"
-              className="logo-large"
-            />
-            <h1 className="main-title">
-              {orderResponse ? 'Order Details' : 'Choose Payment Method'}
-            </h1>
-          </div>
-
-          {/* Debug Button - Only in development */}
-          {process.env.NODE_ENV === 'development' && (
-            <button
-              className="pay-button debug-button"
-              onClick={testWebView}
-            >
-              Test WebView (Debug)
-            </button>
-          )}
-
           {/* Payment Options */}
           {!orderResponse && (
             <>
               <div className="payment-options">
                 <div
-                  className={`payment-option ${selectedMethod === 'online' ? 'selected' : ''}`}
-                  onClick={() => handlePaymentOptionClick('online')}
+                  className={`payment-option ${
+                    selectedMethod === "online" ? "selected" : ""
+                  }`}
+                  onClick={() => handlePaymentOptionClick("online")}
                 >
                   <img
                     src="https://cdn.zeebiz.com/sites/default/files/2024/01/03/274966-upigpay.jpg"
@@ -594,7 +581,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
                 onClick={handlePayment}
                 disabled={loading || !selectedMethod}
               >
-                {loading ? 'Processing...' : 'PAY'}
+                {loading ? "Processing..." : "PAY"}
               </button>
             </>
           )}
@@ -608,7 +595,9 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
               </div>
               <div className="detail-row">
                 <span className="detail-label">Total Amount:</span>
-                <span className="detail-value">₹{orderResponse.totalAmount}</span>
+                <span className="detail-value">
+                  ₹{orderResponse.totalAmount}
+                </span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">Status:</span>

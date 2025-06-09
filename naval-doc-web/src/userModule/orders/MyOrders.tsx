@@ -12,7 +12,7 @@ import axios from "axios";
 
 const { Title, Text } = Typography;
 
-const BASE_URL = "https://server.welfarecanteen.in/api";
+const BASE_URL = "http://192.168.1.12:3002/api";
 
 interface OrderItem {
   id: number;
