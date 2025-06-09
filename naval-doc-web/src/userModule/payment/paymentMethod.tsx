@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
+import UserHeader from '../userComponents/UserHeader';
 
 // Type definitions
 interface PaymentData {
@@ -39,14 +41,16 @@ interface ApiResponse {
 }
 
 interface PaymentMethodProps {
-  navigation?: any; // You can replace with proper navigation type if using React Router
+  // Remove navigation prop since we'll use useNavigate hook
 }
 
 type PaymentMethodType = 'online' | 'cash' | '';
 
-const API_URL = 'http://192.168.1.12:3002/api/order/placeOrder';
+const API_URL = 'https://server.welfarecanteen.in/api/order/placeOrder';
 
-const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
+const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
+  const navigate = useNavigate(); // Add this hook
+  
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(null);
@@ -205,6 +209,11 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
 
   const handlePaymentOptionClick = (method: PaymentMethodType): void => {
     setSelectedMethod(method);
+  };
+
+  // Handle wallet navigation
+  const handleWalletClick = (): void => {
+    navigate('/wallet'); // Use navigate instead of navigation
   };
 
   console.log('Current state:', {
@@ -517,33 +526,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({ navigation }) => {
         }
       `}</style>
 
-      {/* Top Header */}
-      <div className="header-top">
-        <div className="header-left">
-          <img
-            src="https://welfarecanteen.in/public/Naval.jpg"
-            alt="Naval Logo"
-            className="logo-small"
-          />
-          <h1 className="header-title">Welfare Canteen</h1>
-        </div>
-        <div className="header-icons">
-          <div className="icon-border">
-            <img
-              src="https://creazilla-store.fra1.digitaloceanspaces.com/icons/3235242/wallet-icon-sm.png"
-              alt="Wallet"
-              className="icon-small"
-            />
-          </div>
-          <div className="icon-border">
-            <img
-              src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
-              alt="Profile"
-              className="icon-small"
-            />
-          </div>
-        </div>
-      </div>
+      <UserHeader headerText={"Payment Method"}/>
 
       {/* WebView/Iframe for Online Payment - Full Screen when active */}
       {showWebView && paymentLink ? (

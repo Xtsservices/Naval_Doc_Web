@@ -17,8 +17,9 @@ import {
   UnorderedListOutlined,
   ShoppingCartOutlined,
   LogoutOutlined,
+  WalletOutlined
 } from "@ant-design/icons";
-import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
+// import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
 import navyLogo from "/public/Naval.jpg";
 import { useNavigate } from "react-router-dom";
 
@@ -66,13 +67,13 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
 
   const profileMenu = (
     <Menu style={{ width: 200 }}>
-      <Menu.Item
+      {/* <Menu.Item
         key="profile"
         icon={<UserOutlined />}
         onClick={() => handleNavigation("/profile")}
       >
         Profile
-      </Menu.Item>
+      </Menu.Item> */}
 
       <Menu.Item
         key="Orders"
@@ -88,6 +89,13 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
         onClick={() => handleNavigation("/user/myCart")}
       >
         Cart
+      </Menu.Item>
+      <Menu.Item
+        key="wallet"
+        icon={<WalletOutlined />}
+        onClick={() => handleNavigation("/user/wallet")}
+      >
+        Wallet
       </Menu.Item>
 
       <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
@@ -120,7 +128,9 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
                 display: "flex",
                 alignItems: "center",
                 gap: "12px",
+                cursor: "pointer",
               }}
+              onClick={() => navigate("/user/select-canteen")}
             >
               <img
                 src={navyLogo}

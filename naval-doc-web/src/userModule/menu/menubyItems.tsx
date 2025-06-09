@@ -140,7 +140,7 @@ const MenuByItems: React.FC = () => {
 
       console.log("Request body:", body);
       const token = localStorage.getItem("Token");
-      const API_BASE_URL = "http://192.168.1.12:3002/api";
+      const API_BASE_URL = "https://server.welfarecanteen.in/api";
       await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +170,7 @@ const MenuByItems: React.FC = () => {
   const fetchMenuItems = async () => {
     try {
       const res = await fetch(
-        `http://192.168.1.12:3002/api/menu/getMenuById?id=${menuId}`,
+        `https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`,
         {
           headers: {
             Authorization: token,
