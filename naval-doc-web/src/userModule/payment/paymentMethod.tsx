@@ -46,7 +46,7 @@ interface PaymentMethodProps {
 
 type PaymentMethodType = "online" | "cash" | "";
 
-const API_URL = "http://192.168.1.12:3002/api/order/placeOrder";
+const API_URL = "https://server.welfarecanteen.in/api/order/placeOrder";
 
 const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
   const navigate = useNavigate(); // Add this hook
