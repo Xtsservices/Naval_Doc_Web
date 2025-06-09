@@ -35,6 +35,7 @@ import SelectMenu from "./userModule/selectMenu";
 import MenuByItems from "./userModule/menu/menubyItems";
 import MyCart from "./userModule/cart/myCart";
 import PaymentMethod from "./userModule/payment/paymentMethod";
+import MyOrders from "./userModule/orders/MyOrders";
 const App = () => {
   return (
     <Router>
@@ -79,12 +80,15 @@ const App = () => {
             />
           </Route>
         </Route>
+
         <Route path="/user/select-canteen" element={<UserSelectCanteen />} />
         <Route path="/user/select-menu" element={<SelectMenu />} />
         <Route path="/user/selected-menu/:id" element={<MenuByItems />} />
         {/* <Route path="/user/myCart" element={<Cart />} /> */}
         <Route path="/user/myCart" element={<MyCart />} />
         <Route path="/user/paymentMethod" element={<PaymentMethod />} />
+        <Route path="/user/orders" element={<MyOrders />} />
+        
 
       
 
