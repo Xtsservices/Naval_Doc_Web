@@ -26,6 +26,7 @@ const PaymentResponse = () => {
   const [searchParams] = useSearchParams();
     console.log("searchParams", searchParams);
 const navigate = useNavigate();
+
   useEffect(() => {
     const linkId = searchParams.get("link_id");
     console.log("Link ID from URL:", linkId);
@@ -47,9 +48,9 @@ const navigate = useNavigate();
         const data = await res.json();
         console.log("/user/orders============",data)
         setPayment(data.data?.payment);
-        setInterval(() => {
-          navigate("/user/orders")
-        }, 2000);
+        // setInterval(() => {
+        //   navigate("/user/orders")
+        // }, 2000);
         
       })
       .catch((err) => setError(err.message))
