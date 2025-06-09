@@ -34,6 +34,7 @@ import UserSelectCanteen from "./userModule/userSelectCanteen";
 import SelectMenu from "./userModule/selectMenu";
 import MenuByItems from "./userModule/menu/menubyItems";
 import MyCart from "./userModule/cart/myCart";
+import PaymentMethod from "./userModule/payment/paymentMethod";
 const App = () => {
   return (
     <Router>
@@ -83,6 +84,7 @@ const App = () => {
         <Route path="/user/selected-menu/:id" element={<MenuByItems />} />
         {/* <Route path="/user/myCart" element={<Cart />} /> */}
         <Route path="/user/myCart" element={<MyCart />} />
+        <Route path="/user/paymentMethod" element={<PaymentMethod />} />
 
       
 
