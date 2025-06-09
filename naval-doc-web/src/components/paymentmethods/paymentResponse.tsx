@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 type Payment = {
   createdAt: number;
@@ -25,7 +25,7 @@ const PaymentResponse = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
     console.log("searchParams", searchParams);
-
+const navigate = useNavigate();
   useEffect(() => {
     const linkId = searchParams.get("link_id");
     console.log("Link ID from URL:", linkId);
@@ -47,6 +47,10 @@ const PaymentResponse = () => {
         const data = await res.json();
         console.log("/user/orders============",data)
         setPayment(data.data?.payment);
+        setInterval(() => {
+          navigate("/user/orders")
+        }, 2000);
+        
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
