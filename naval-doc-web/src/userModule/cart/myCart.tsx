@@ -93,7 +93,7 @@ const MyCart: React.FC = () => {
   };
 
   const handlePayment = () => {
-    navigation("PaymentMethod" as never);
+    navigation("/user/paymentMethod" as never);
   };
 
   const subtotal =
