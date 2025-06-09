@@ -18,8 +18,8 @@ const LoginScreen: React.FC = () => {
   // Create refs for each OTP input field
   const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
-  const API_URL_SEND = "https://server.welfarecanteen.in/api/login";
-  const API_URL_VERIFY = "https://server.welfarecanteen.in/api/verifyOtp";
+  const API_URL_SEND = "http://192.168.1.12:3002/api/login";
+  const API_URL_VERIFY = "http://192.168.1.12:3002/api/verifyOtp";
 
   const mobileValue = Form.useWatch("mobile", form); // ✅ Watching mobile field
 
@@ -32,19 +32,6 @@ const LoginScreen: React.FC = () => {
     try {
       await form.validateFields(["mobile"]);
       const mobileValue = form.getFieldValue("mobile");
-
-      // Only allow login for specific numbers
-      const allowedNumbers = ["7093081518", "9392392143", "9052519059"];
-      if (!allowedNumbers.includes(mobileValue)) {
-        form.setFields([
-          {
-            name: "mobile",
-            errors: ["This mobile number is not allowed."],
-          },
-        ]);
-        return;
-      }
-
       setLoading(true);
       setOtpButtonDisabled(true);
 
@@ -138,26 +125,26 @@ const LoginScreen: React.FC = () => {
         });
 
         console.log("Response from server:", response.data.data.mobile);
-
-        if (response.data.data.mobile == "9052519059") {
-          const token = response?.data?.token;
-          localStorage.setItem("Token", token);
-          console.log("Redirecting to user select canteen");
-          console.log("Token set in localStorage", token);
-          navigate("/user/select-canteen");
-          return;
-        }
+        const token = response?.data?.token;
+        localStorage.setItem("Token", token);
+        //this is admin numbers
+        const allowedNumbers = ["7093081518", "9392392143"];
 
         if (
           response.status === 200 &&
           response.data.message === "OTP verified successfully"
         ) {
-          const token = response?.data?.token;
-          localStorage.setItem("Token", token);
-          toastSuccess("Login successful! Welcome back.");
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
+          if (allowedNumbers.includes(response.data.data.mobile)) {
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 1000);
+            setLoading(false);
+            return;
+          }
+
+          //this is for users
+          navigate("/user/select-canteen");
+          return;
         } else {
           toastError("Invalid OTP or verification failed.");
           form.setFields([

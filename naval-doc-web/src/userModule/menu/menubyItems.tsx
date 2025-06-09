@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CartData, CartItemsState } from "../userModuleTypes/cartTypes";
-import { addItemToCart, fetchCartData, findCartItemByItemId, removeCartItem, updateCartItemQuantity } from "../service/cartHelpers";
+import {
+  addItemToCart,
+  fetchCartData,
+  findCartItemByItemId,
+  removeCartItem,
+  updateCartItemQuantity,
+} from "../service/cartHelpers";
+import UserHeader from "../userComponents/UserHeader";
 
 interface Pricing {
   id: number;
@@ -38,28 +45,28 @@ const MenuByItems: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemsState>({});
   const [cartUpdated, setCartUpdated] = useState(false);
   const [updateLoading, setUpdateLoading] = useState<string | null>(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
   const menuId = id;
   const token = localStorage.getItem("Token") || "";
 
-    // Increment quantity
+  // Increment quantity
   const increaseQuantity = async (item: MenuItem) => {
     setCartUpdated(true);
     try {
       setUpdateLoading(String(item.id));
-      console.log(item, 'itemm---------increasingg');
+      console.log(item, "itemm---------increasingg");
       const cartItemId22 = cartData?.cartItems.find(
-        cartItem => cartItem.itemId === item.item.id,
+        (cartItem) => cartItem.itemId === item.item.id
       )?.item?.id;
-      console.log(cartItemId22, 'cartItemId---increase-quantity');
+      console.log(cartItemId22, "cartItemId---increase-quantity");
       // we get cartItemId from cardData only ###
 
       const itemId = item.item.id;
       const itemKey = String(itemId);
-      console.log(cartItems, 'cartItems---i');
+      console.log(cartItems, "cartItems---i");
 
       // Check if item exists in cart
       if (!cartItems[itemKey]) {
@@ -68,12 +75,12 @@ const navigate = useNavigate();
       }
 
       const currentQty = cartItems[itemKey]?.quantity;
-      console.log(currentQty, 'currentQty---====');
+      console.log(currentQty, "currentQty---====");
 
       const maxQty = Number(item.maxQuantity) || 10;
 
       if (currentQty >= maxQty) {
-        alert('Maximum quantity reached');
+        alert("Maximum quantity reached");
         setUpdateLoading(null);
         return;
       }
@@ -85,16 +92,16 @@ const navigate = useNavigate();
         cartItemId: cartItemId22,
         quantity: newQty,
       };
-      console.log(body, 'body---increase-quantity');
+      console.log(body, "body---increase-quantity");
 
       //   {
       //     "cartId":3,"cartItemId":2,"quantity":5
       // }
-      const cartId = cartData?.id ? cartData?.id : '';
+      const cartId = cartData?.id ? cartData?.id : "";
       await updateCartItemQuantity(
         cartId,
-        parseInt(cartItemId22?.toString() || '0'),
-        newQty,
+        parseInt(cartItemId22?.toString() || "0"),
+        newQty
       );
 
       // Refresh cart data
@@ -102,7 +109,7 @@ const navigate = useNavigate();
       setCartData(updatedCartData);
 
       // Update cart items state
-      setCartItems(prev => ({
+      setCartItems((prev) => ({
         ...prev,
         [itemKey]: {
           ...prev[itemKey],
@@ -112,8 +119,8 @@ const navigate = useNavigate();
 
       setUpdateLoading(null);
     } catch (err) {
-      setError('Failed to update quantity');
-      console.error('Error updating quantity:', err);
+      setError("Failed to update quantity");
+      console.error("Error updating quantity:", err);
       setUpdateLoading(null);
     }
   };
@@ -139,7 +146,7 @@ const navigate = useNavigate();
       const cartItemId = cartItems[itemKey].cartItemId;
 
       if (currentQty <= minQty) {
-        console.log('Removing item from cart',currentQty,minQty);
+        console.log("Removing item from cart", currentQty, minQty);
         // Remove item from cart
         await removeCartItem(cartData?.id || 0, cartItemId);
 
@@ -148,16 +155,15 @@ const navigate = useNavigate();
         setCartData(updatedCartData);
 
         // Update cart items state
-        setCartItems(prev => {
-          const updated = {...prev};
+        setCartItems((prev) => {
+          const updated = { ...prev };
           delete updated[itemKey];
           return updated;
         });
       } else {
         // Decrease quantity
         const newQty = currentQty - 1;
-        console.log('Removing item from cart newQty',newQty);
-
+        console.log("Removing item from cart newQty", newQty);
 
         await updateCartItemQuantity(cartData?.id || 0, cartItemId, newQty);
 
@@ -166,7 +172,7 @@ const navigate = useNavigate();
         setCartData(updatedCartData);
 
         // Update cart items state
-        setCartItems(prev => ({
+        setCartItems((prev) => ({
           ...prev,
           [itemKey]: {
             ...prev[itemKey],
@@ -177,8 +183,8 @@ const navigate = useNavigate();
 
       setUpdateLoading(null);
     } catch (err) {
-      setError('Failed to update quantity');
-      console.error('Error updating quantity:', err);
+      setError("Failed to update quantity");
+      console.error("Error updating quantity:", err);
       setUpdateLoading(null);
     }
   };
@@ -186,7 +192,7 @@ const navigate = useNavigate();
   const fetchMenuItems = async () => {
     try {
       const res = await fetch(
-        `https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`,
+        `http://192.168.1.12:3002/api/menu/getMenuById?id=${menuId}`,
         {
           headers: {
             Authorization: token,
@@ -236,12 +242,11 @@ const navigate = useNavigate();
     fetchMenuItems();
     // Fetch cart data when the component mounts
     getCartData();
-  }, [cartUpdated,id]);
+  }, [cartUpdated, id]);
 
- 
-    const addToCart = async (item: any, menudata: any) => {
-    console.log('Adding to cart:', item);
-    console.log('menudata:', menudata);
+  const addToCart = async (item: any, menudata: any) => {
+    console.log("Adding to cart:", item);
+    console.log("menudata:", menudata);
     try {
       setUpdateLoading(item.id);
       const minQty = 1;
@@ -249,9 +254,9 @@ const navigate = useNavigate();
       const result = await addItemToCart(
         item.item.id,
         // menuData?.id || '',
-        item?.menuId || '',
-        menuData?.menuConfigurationId || '',
-        minQty,
+        item?.menuId || "",
+        menuData?.menuConfigurationId || "",
+        minQty
       );
 
       // Refresh cart data
@@ -260,11 +265,11 @@ const navigate = useNavigate();
 
       // Find the cart item that was just added
       const cartItem = findCartItemByItemId(updatedCartData, item.item.id);
-      console.log(cartItem, 'cartItem---added-to-cart');
+      console.log(cartItem, "cartItem---added-to-cart");
 
       if (cartItem) {
         // Update cart items state
-        setCartItems(prev => ({
+        setCartItems((prev) => ({
           ...prev,
           [item.item.id]: {
             quantity: cartItem.quantity,
@@ -275,18 +280,17 @@ const navigate = useNavigate();
 
       setUpdateLoading(null);
     } catch (err) {
-      setError('Failed to add item to cart');
-      console.error('Error adding to cart:', err);
+      setError("Failed to add item to cart");
+      console.error("Error adding to cart:", err);
       setUpdateLoading(null);
     }
   };
 
-console.log(cartItems, 'cartItems');
+  // console.log(cartItems, "cartItems");
   return (
     <div style={styles.container}>
-      <header style={styles.header}>
-        <h2 style={styles.title}>{menuData?.name || "Menu"}</h2>
-      </header>
+      <UserHeader headerText={menuData?.name || "Menu"} />
+
       <div>
         {items.map((menuItem) => (
           <div key={menuItem.id} style={styles.card}>
@@ -301,7 +305,7 @@ console.log(cartItems, 'cartItems');
                 <span style={styles.price}>₹{menuItem.item.pricing.price}</span>
               </div>
               <div style={styles.desc}>{menuItem.item.description}</div>
-              {!cartItems[menuItem.item.id] ?(
+              {!cartItems[menuItem.item.id] ? (
                 <div style={styles.row}>
                   <button
                     onClick={() => addToCart(menuItem, menuData)}
@@ -327,9 +331,8 @@ console.log(cartItems, 'cartItems');
                   >
                     +
                   </button>
-                </div>  
+                </div>
               )}
-              
             </div>
           </div>
         ))}
@@ -340,39 +343,37 @@ console.log(cartItems, 'cartItems');
         )}
       </div>
       {Object.keys(cartItems).length > 0 ? (
-  <button
-    style={{
-      position: "fixed",
-      bottom: 20,
-      right: 20,
-      backgroundColor: "#071ea0",
-      color: "#fff",
-      border: "none",
-      borderRadius: 30,
-      padding: "12px 24px",
-      fontSize: 16,
-      fontWeight: 600,
-      boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-      zIndex: 1000,
-      cursor: "pointer",
-    }}
-    onClick={() => {
-      // Navigate to cart page or handle logic
-      navigate("/user/myCart")
-      console.log("Go to Cart clicked");
-    }}
-  >
-    Go to Cart ({Object.keys(cartItems).length})
-  </button>
-) : null}
-
+        <button
+          style={{
+            position: "fixed",
+            bottom: 20,
+            right: 20,
+            backgroundColor: "#071ea0",
+            color: "#fff",
+            border: "none",
+            borderRadius: 30,
+            padding: "12px 24px",
+            fontSize: 16,
+            fontWeight: 600,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+            zIndex: 1000,
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            // Navigate to cart page or handle logic
+            navigate("/user/myCart");
+            console.log("Go to Cart clicked");
+          }}
+        >
+          Go to Cart ({Object.keys(cartItems).length})
+        </button>
+      ) : null}
     </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
-    padding: "16px 0",
     background: "#f7f8fa",
     minHeight: "100vh",
     fontFamily: "sans-serif",

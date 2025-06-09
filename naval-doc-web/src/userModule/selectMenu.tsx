@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UserHeader from "./userComponents/UserHeader";
 
 // Sample icons as SVGs (replace with your own or use a library)
 const WalletIcon = () => (
@@ -89,7 +90,7 @@ const navigate = useNavigate();
       console.log("Canteen ID:", canteenId);
       try {
         const res = await axios.get(
-          `https://server.welfarecanteen.in/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
+          `http://192.168.1.12:3002/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
           {
             headers: {
               Authorization: token,
@@ -115,67 +116,7 @@ const navigate = useNavigate();
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          background: "#0026A7",
-          padding: "18px 16px 14px 16px",
-          borderBottomLeftRadius: 24,
-          borderBottomRightRadius: 24,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              background: "#fff",
-              borderRadius: 12,
-              marginRight: 8,
-            }}
-          />
-          <span
-            style={{
-              color: "#fff",
-              fontWeight: 700,
-              fontSize: 22,
-              letterSpacing: 1,
-            }}
-          >
-            Welfare Canteen
-          </span>
-        </div>
-        <div style={{ display: "flex", gap: 16 }}>
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: "50%",
-              width: 44,
-              height: 44,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <WalletIcon />
-          </div>
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: "50%",
-              width: 44,
-              height: 44,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <UserIcon />
-          </div>
-        </div>
-      </div>
+      <UserHeader headerText={"Welfare Canteen"}/>
 
       {/* Search Bar */}
       <div
