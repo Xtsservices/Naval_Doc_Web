@@ -9,6 +9,7 @@ import {
   updateCartItemQuantity,
 } from "../service/cartHelpers";
 import UserHeader from "../userComponents/UserHeader";
+import axios from "axios";
 
 interface Pricing {
   id: number;
