@@ -32,7 +32,8 @@ import AboutUs from "./homepage/components/About us";
 import Overview from "./homepage/components/Overview";
 import UserSelectCanteen from "./userModule/userSelectCanteen";
 import SelectMenu from "./userModule/selectMenu";
-
+import MenuByItems from "./userModule/menu/menubyItems";
+import MyCart from "./userModule/cart/myCart";
 const App = () => {
   return (
     <Router>
@@ -79,6 +80,11 @@ const App = () => {
         </Route>
         <Route path="/user/select-canteen" element={<UserSelectCanteen />} />
         <Route path="/user/select-menu" element={<SelectMenu />} />
+        <Route path="/user/selected-menu/:id" element={<MenuByItems />} />
+        {/* <Route path="/user/myCart" element={<Cart />} /> */}
+        <Route path="/user/myCart" element={<MyCart />} />
+
+      
 
         {/* Admin Routes */}
 

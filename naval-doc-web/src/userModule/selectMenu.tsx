@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Sample icons as SVGs (replace with your own or use a library)
 const WalletIcon = () => (
@@ -79,7 +80,7 @@ type MenuData = Record<string, Record<string, MenuItem[]>>;
 const SelectMenu: React.FC = () => {
   const [menus, setMenus] = useState<MenuData>({});
   const [loading, setLoading] = useState(true);
-
+const navigate = useNavigate();
   useEffect(() => {
     const fetchMenus = async () => {
       setLoading(true);
@@ -95,6 +96,7 @@ const SelectMenu: React.FC = () => {
             },
           }
         );
+        console.log("menu item data", res);
         setMenus(res.data.data || {});
       } catch (e) {
         setMenus({});
@@ -239,44 +241,54 @@ const SelectMenu: React.FC = () => {
                     No menu available
                   </div>
                 ) : (
-                  Object.entries(menus[date]).map(([meal]) => (
-                    <div
-                      key={meal}
-                      style={{
-                        width: 100,
-                        background: "#F8F9FB",
-                        borderRadius: 14,
-                        boxShadow: "0 1px 4px #0001",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        padding: "10px 0 8px 0",
-                        cursor: "pointer",
-                        transition: "box-shadow 0.2s",
-                      }}
-                    >
-                      <img
-                        src={mealImages[meal] || mealImages.Breakfast}
-                        alt={meal}
+                  Object.entries(menus[date]).map((menuItem) => {
+                    const meal = menuItem[0];
+                    const mealID = menuItem[1];
+                    console.log(`Selected mealID===: mealID`, mealID);
+
+                    return (
+                      <div
+                        key={meal}
                         style={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: 10,
-                          objectFit: "cover",
-                          marginBottom: 8,
+                          width: 100,
+                          background: "#F8F9FB",
+                          borderRadius: 14,
+                          boxShadow: "0 1px 4px #0001",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          padding: "10px 0 8px 0",
+                          cursor: "pointer",
+                          transition: "box-shadow 0.2s",
                         }}
-                      />
-                      <span
-                        style={{
-                          color: "#0026A7",
-                          fontWeight: 600,
-                          fontSize: 16,
+                        onClick={() => {
+                          localStorage.setItem("selectedDate", date);
+                          navigate(`/user/selected-menu/${mealID[0].id}`);;
                         }}
                       >
-                        {meal}
-                      </span>
-                    </div>
-                  ))
+                        <img
+                          src={mealImages[meal] || mealImages.Breakfast}
+                          alt={meal}
+                          style={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: 10,
+                            objectFit: "cover",
+                            marginBottom: 8,
+                          }}
+                        />
+                        <span
+                          style={{
+                            color: "#0026A7",
+                            fontWeight: 600,
+                            fontSize: 16,
+                          }}
+                        >
+                          {meal}
+                        </span>
+                      </div>
+                    );
+                  })
                 )}
               </div>
             </div>
