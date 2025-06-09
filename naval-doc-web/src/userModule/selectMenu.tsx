@@ -232,6 +232,7 @@ const navigate = useNavigate();
                   marginLeft: 18,
                   marginBottom: 10,
                 }}
+
               >
                 {date}
               </div>
