@@ -43,7 +43,7 @@ const MyCart: React.FC = () => {
         cartId: cartData?.id,
       };
       const token = localStorage.getItem("Token");
-      const API_BASE_URL = "https://server.welfarecanteen.in/api";
+      const API_BASE_URL = "http://192.168.1.12:3002/api";
       await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
@@ -114,34 +114,7 @@ const MyCart: React.FC = () => {
         </div>
       )}
 
-      {/* Error */}
-      {error && (
-        <div
-          style={{
-            color: "red",
-            textAlign: "center",
-            marginTop: 20,
-            marginBottom: 20,
-          }}
-        >
-          {error}
-          <br />
-          <button
-            onClick={loadCartData}
-            style={{
-              marginTop: 10,
-              padding: "8px 16px",
-              cursor: "pointer",
-              borderRadius: 6,
-              border: "none",
-              backgroundColor: "#1976d2",
-              color: "white",
-            }}
-          >
-            Retry
-          </button>
-        </div>
-      )}
+     
 
       {/* If cart is empty */}
       {!loading && (!cartData || cartData.cartItems.length === 0) && (
@@ -153,13 +126,7 @@ const MyCart: React.FC = () => {
             color: "#444",
           }}
         >
-          <img
-            src="https://img.icons8.com/ios/100/000000/empty-cart.png"
-            alt="Empty Cart"
-            width={80}
-            height={80}
-            style={{ opacity: 0.6 }}
-          />
+         
           <h3 style={{ marginTop: 20, fontWeight: 500 }}>
             Your cart is empty
           </h3>

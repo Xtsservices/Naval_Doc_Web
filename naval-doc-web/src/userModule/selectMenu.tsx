@@ -90,7 +90,7 @@ const navigate = useNavigate();
       console.log("Canteen ID:", canteenId);
       try {
         const res = await axios.get(
-          `https://server.welfarecanteen.in/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
+          `http://192.168.1.12:3002/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
           {
             headers: {
               Authorization: token,

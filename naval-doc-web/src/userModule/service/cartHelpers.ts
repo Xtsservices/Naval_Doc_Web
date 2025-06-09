@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base API URL
-const API_BASE_URL = 'https://server.welfarecanteen.in/api';
+const API_BASE_URL = 'http://192.168.1.12:3002/api';
 
 // Get authorization token
 export const getAuthToken = async () => {
@@ -208,7 +208,7 @@ export const fetchDashboardData = async () => {
   try {
     const token = await getAuthToken();
     const response = await fetch(
-      'https://server.welfarecanteen.in/api/adminDasboard/dashboard',
+      'http://192.168.1.12:3002/api/adminDasboard/dashboard',
       {
         headers: {
           Authorization: token || '',
@@ -226,7 +226,7 @@ export const fetchRecentOrders = async () => {
   try {
     const token = await getAuthToken();
     const response = await fetch(
-      'https://server.welfarecanteen.in/api/adminDasboard/getTotalOrders',
+      'http://192.168.1.12:3002/api/adminDasboard/getTotalOrders',
       {
         headers: {
           Authorization: token || '',
