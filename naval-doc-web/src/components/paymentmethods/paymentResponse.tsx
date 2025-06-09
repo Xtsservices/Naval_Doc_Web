@@ -24,8 +24,8 @@ const PaymentResponse = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
-    console.log("searchParams", searchParams);
-const navigate = useNavigate();
+  console.log("searchParams", searchParams);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const linkId = searchParams.get("link_id");
@@ -35,23 +35,25 @@ const navigate = useNavigate();
       setLoading(false);
       return;
     }
- console.log("/user/orders======start======",10)
-    fetch("https://server.welfarecanteen.in/api/order/CashfreePaymentLinkDetails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ linkId }),
-    })
+    console.log("/user/orders======start======", 10);
+    fetch(
+      "https://server.welfarecanteen.in/api/order/CashfreePaymentLinkDetails",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ linkId }),
+      }
+    )
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch payment details");
         const data = await res.json();
-        console.log("/user/orders============",data)
+        console.log("/user/orders============", data);
         setPayment(data.data?.payment);
         // setInterval(() => {
         //   navigate("/user/orders")
         // }, 2000);
-        
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -250,66 +252,87 @@ const navigate = useNavigate();
           ) : error ? (
             <div style={{ color: "red" }}>{error}</div>
           ) : payment ? (
-            <table
-              style={{ margin: "0 auto", textAlign: "left", fontSize: 14 }}
-            >
-              <tbody>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Created At
-                  </td>
-                  <td>{new Date(payment.createdAt * 1000).toLocaleString()}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    ID
-                  </td>
-                  <td>{payment.id}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Order ID
-                  </td>
-                  <td>{payment.orderId}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    User ID
-                  </td>
-                  <td>{payment.userId}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Payment Method
-                  </td>
-                  <td>{payment.paymentMethod}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Amount
-                  </td>
-                  <td>₹{payment.amount}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Total Amount
-                  </td>
-                  <td>₹{payment.totalAmount}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Currency
-                  </td>
-                  <td>{payment.currency}</td>
-                </tr>
-                <tr>
-                  <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
-                    Status
-                  </td>
-                  <td>{payment.status}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div style={{ textAlign: "center", marginTop: 20 }}>
+              <table
+                style={{ margin: "0 auto", textAlign: "left", fontSize: 14 }}
+              >
+                <tbody>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Created At
+                    </td>
+                    <td>
+                      {new Date(payment.createdAt * 1000).toLocaleString()}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      ID
+                    </td>
+                    <td>{payment.id}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Order ID
+                    </td>
+                    <td>{payment.orderId}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      User ID
+                    </td>
+                    <td>{payment.userId}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Payment Method
+                    </td>
+                    <td>{payment.paymentMethod}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Amount
+                    </td>
+                    <td>₹{payment.amount}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Total Amount
+                    </td>
+                    <td>₹{payment.totalAmount}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Currency
+                    </td>
+                    <td>{payment.currency}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      Status
+                    </td>
+                    <td>{payment.status}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* 🔘 Navigate Button */}
+              <button
+                style={{
+                  marginTop: 20,
+                  padding: "10px 24px",
+                  fontSize: 14,
+                  backgroundColor: "#1890ff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/user/orders")}
+              >
+                View My Orders
+              </button>
+            </div>
           ) : (
             <div>No payment data found.</div>
           )}
