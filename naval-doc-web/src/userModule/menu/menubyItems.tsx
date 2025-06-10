@@ -264,7 +264,8 @@ const MenuByItems: React.FC = () => {
     }
   };
 
-  // console.log(cartItems, "cartItems");
+  console.log(cartItems, "cartItems");
+  console.log(items, "items");
   return (
     <div style={styles.container}>
       <UserHeader headerText={menuData?.name || "Menu"} />

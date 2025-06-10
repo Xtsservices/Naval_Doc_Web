@@ -38,17 +38,17 @@ const SuperAdminDashboard: React.FC = () => {
   };
 
   const statCards = [
-    { title: "TOTAL ORDERS", value: countsData.totalOrders },
     { title: "TOTAL CANTEENS", value: countsData.totalCanteens },
     { title: "TOTAL ITEMS", value: countsData.totalItems },
+    { title: "TOTAL ORDERS", value: countsData.totalOrders },
     { title: "REVENUE", value: countsData.revenue !== null && countsData.revenue !== undefined ? `₹ ${countsData.revenue}` : "₹ 0" },
   ];
 
   const featureCards = [
     { title: "Canteens", image: canteenImg },
+    { title: "Items", image: itemsImage },
     { title: "Menu", image: menuImage },
     { title: "Orders", image: ordersImage },
-    { title: "Items", image: itemsImage },
   ];
 
   return (
@@ -64,7 +64,7 @@ const SuperAdminDashboard: React.FC = () => {
       <div style={{ padding: "20px", paddingBottom: 0, flexGrow: 1 }}>
         <Row gutter={[16, 16]} style={{ marginBottom: "30px" }}>
           {statCards.map((stat, index) => (
-            <Col xs={24} sm={12} md={4} xl={4} key={index}>
+            <Col xs={24} sm={12} md={6} xl={6} key={index}>
               <Card
                 hoverable
                 style={{
