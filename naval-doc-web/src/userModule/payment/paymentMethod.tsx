@@ -82,7 +82,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
           "Content-Type": "application/json",
           authorization: token,
         },
-        body: JSON.stringify({ paymentMethod: selectedMethod }),
+        body: JSON.stringify({ paymentMethod: ["wallet",selectedMethod] }),
       });
 
       const data: ApiResponse = await response.json();
