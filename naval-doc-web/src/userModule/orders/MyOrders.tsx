@@ -148,7 +148,7 @@ const MyOrders: React.FC = () => {
         renderItem={(order) => (
           <List.Item>
             <Card
-              title={`Order #${order.id}`}
+              title={`Order ID: NV${order.id}`}
               extra={
                 <Text
                   type={
