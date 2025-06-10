@@ -69,6 +69,24 @@ export default function Header() {
         <LogoImage src={logo} alt="Naval Logo" />
       </Link>
       <CenterTitle>WELFARE CANTEEN</CenterTitle>
+      <Link to="/login" style={{ textDecoration: "none" }}>
+        <button
+          style={{
+        background: "#fff",
+        color: "#010080",
+        border: "none",
+        borderRadius: "4px",
+        padding: "0.5rem 1.2rem",
+        fontWeight: 600,
+        cursor: "pointer",
+        fontSize: "1rem",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+        transition: "background 0.2s, color 0.2s"
+          }}
+        >
+          Login
+        </button>
+      </Link>
     </HeaderWrapper>
   );
 }

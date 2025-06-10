@@ -227,11 +227,13 @@ const MenuList: React.FC = () => {
                     <img
                       alt={menu.name}
                       src={
-                        menu?.menuConfiguration?.name === "Lunch"
+                            menu?.menuMenuConfiguration?.name === "Lunch"
                           ? lunchImage
-                          : menu?.menuConfiguration?.name === "Snacks"
+                          : menu?.menuMenuConfiguration?.name === "Snack"
                           ? snacksImage
-                          : tiffinImage
+                          : menu?.menuMenuConfiguration?.name === "Breakfast"
+                          ? tiffinImage
+                          : lunchImage
                       }
                       style={{
                         width: "100%",

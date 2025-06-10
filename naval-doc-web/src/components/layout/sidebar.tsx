@@ -62,18 +62,18 @@ const StudentAppSidebar: React.FC<StudentAppSidebarProps> = ({
       path: "/dashboard",
     },
     
-    {
-      key: "finance_management",
-      label: "Finance ",
-      icon: MoneyCollectOutlined,
-      path: "/finance-management",
-    },
-    {
-      key: "inventory_management",
-      label: "Inventory ",
-      icon: DatabaseOutlined,
-      path: "/inventory-management",
-    },
+    // {
+    //   key: "finance_management",
+    //   label: "Finance ",
+    //   icon: MoneyCollectOutlined,
+    //   path: "/finance-management",
+    // },
+    // {
+    //   key: "inventory_management",
+    //   label: "Inventory ",
+    //   icon: DatabaseOutlined,
+    //   path: "/inventory-management",
+    // },
   ];
 
   return (

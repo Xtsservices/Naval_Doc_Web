@@ -54,12 +54,9 @@ const MicIcon = () => (
 );
 
 const mealImages: Record<string, string> = {
-  Breakfast:
-    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=200&q=80",
-  Lunch:
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=200&q=80",
-  Snack:
-    "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=200&q=80",
+  Breakfast: "https://images.unsplash.com/photo-1630383249896-424e482df921?auto=format&fit=crop&w=200&q=80", // Indian breakfast (paratha, aloo)
+  Lunch: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=200&q=80", // Indian lunch (biryani)
+  Snack: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=200&q=80", // Indian snacks (samosa, pakora)
 };
 
 type MenuItem = {

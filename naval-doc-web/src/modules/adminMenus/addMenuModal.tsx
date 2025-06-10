@@ -402,7 +402,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                 <Col span={12}>
                                   <Form.Item
                                     name={`min_${item.id}`}
-                                    label="Min Allowed Booking"
+                                    label="Min Allowed Booking Per Person"
                                     initialValue={1}
                                     style={{ marginBottom: 0 }}
                                   >
@@ -416,7 +416,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                 <Col span={12}>
                                   <Form.Item
                                     name={`max_${item.id}`}
-                                    label="Max Allowed Booking"
+                                    label="Max Allowed Booking Per Person"
                                     initialValue={10}
                                     style={{ marginBottom: 0 }}
                                   >

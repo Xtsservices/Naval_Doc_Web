@@ -128,7 +128,7 @@ const LoginScreen: React.FC = () => {
         const token = response?.data?.token;
         localStorage.setItem("Token", token);
         //this is admin numbers
-        const allowedNumbers = ["7093081518", "9392392143"];
+        const allowedNumbers = ["7093081518", "9392392143","9573575468"];
 
         if (
           response.status === 200 &&
