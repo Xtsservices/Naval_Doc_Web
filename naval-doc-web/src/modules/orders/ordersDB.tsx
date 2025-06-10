@@ -143,7 +143,7 @@ const OrdersDashboard: React.FC = () => {
           <StatCard
             icon={<DollarCircleOutlined />}
             // value="₹ 10,000"
-            value={`₹ ${countsData?.totalRevenue || 0}`}
+            value={`₹ ${countsData?.totalAmount || 0}`}
             title="Total Revenue"
           />
         </Col>
@@ -157,19 +157,19 @@ const OrdersDashboard: React.FC = () => {
         <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<CheckCircleOutlined />}
-            value={`${countsData?.totalDeliveries || 0}`}
+            value={`${countsData?.completedOrders || 0}`}
             title="Total Delivered"
           />
         </Col>
         <Col xs={24} sm={12} md={5} lg={4}>
           <StatCard
             icon={<CloseCircleOutlined />}
-            value={`${countsData?.totalCancelled || 0}`}
+            value={`${countsData?.cancelledOrders || 0}`}
             title="Total Canceled"
           />
         </Col>
         <Col xs={24} sm={12} md={5} lg={4}>
-          <StatCard icon={<BankOutlined />} value="3" title="Total Canteens" />
+          <StatCard icon={<BankOutlined />} value={`${countsData?.totalCanteens || 0}`} title="Total Canteens" />
         </Col>
       </Row>
 
