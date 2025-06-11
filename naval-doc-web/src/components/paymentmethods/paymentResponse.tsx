@@ -19,8 +19,15 @@ type Payment = {
   updatedById: number;
 };
 
+type Order = {
+  id: number;
+  qrCode: string;
+  
+};
+
 const PaymentResponse = () => {
   const [payment, setPayment] = useState<Payment | null>(null);
+  const [orderDetails, setOrderDetails] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
@@ -49,8 +56,8 @@ const PaymentResponse = () => {
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch payment details");
         const data = await res.json();
-        console.log("/user/orders============", data);
         setPayment(data.data?.payment);
+        setOrderDetails(data.data?.orderdetails);
         // setInterval(() => {
         //   navigate("/user/orders")
         // }, 2000);
@@ -265,24 +272,24 @@ const PaymentResponse = () => {
                       {new Date(payment.createdAt * 1000).toLocaleString()}
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       ID
                     </td>
                     <td>{payment.id}</td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       Order ID
                     </td>
-                    <td>{payment.orderId}</td>
+                    <td>NV{payment.orderId}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       User ID
                     </td>
                     <td>{payment.userId}</td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       Payment Method
@@ -295,24 +302,46 @@ const PaymentResponse = () => {
                     </td>
                     <td>₹{payment.amount}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       Total Amount
                     </td>
                     <td>₹{payment.totalAmount}</td>
-                  </tr>
-                  <tr>
+                  </tr> */}
+                  {/* <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       Currency
                     </td>
                     <td>{payment.currency}</td>
-                  </tr>
-                  <tr>
+                  </tr> */}
+                    <tr>
                     <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
                       Status
                     </td>
                     <td>{payment.status}</td>
-                  </tr>
+                    </tr>
+                    <tr>
+                    <td style={{ fontWeight: 600, padding: "6px 20px 6px 0" }}>
+                      QR Code
+                    </td>
+                    <td>
+                    <a href={orderDetails?.qrCode} download={`order_${orderDetails?.id}_qr.png`}>
+                      <img
+                        src={orderDetails?.qrCode}
+                        alt={`QR for order #${orderDetails?.id}`}
+                        style={{ width: 150, height: 150, cursor: "pointer" }}
+                      />
+                    </a>
+                    <div style={{ marginTop: 4 }}>
+                      <span style={{ color: "#6c757d", fontSize: "12px" }}>Tap QR to Download</span>
+                    </div>
+                    {/* <img
+                        src={orderDetails?.qrCode}
+                        alt={`QR for order #${orderDetails?.id}`}
+                        style={{ width: 150, height: 150, cursor: "pointer" }}
+                      /> */}
+                    </td>
+                    </tr>
                 </tbody>
               </table>
 
