@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
 import {
   Layout,
-  Button,
   Avatar,
   Typography,
-  Badge,
   Row,
   Col,
   Menu,
   Drawer,
   Popover,
-  Modal,
 } from "antd";
 import {
   UserOutlined,
   UnorderedListOutlined,
   ShoppingCartOutlined,
   LogoutOutlined,
-  WalletOutlined
+  WalletOutlined,
+  HomeOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
-// import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
 import navyLogo from "/public/Naval.jpg";
 import { useNavigate } from "react-router-dom";
 
@@ -42,22 +40,14 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
-
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   const handleNavigation = (path: string) => {
-    if (navigate) {
-      navigate(path);
-    } else {
-      window.location.href = path;
-    }
+    if (navigate) navigate(path);
+    else window.location.href = path;
 
-    if (drawerVisible) {
-      setDrawerVisible(false);
-    }
+    if (drawerVisible) setDrawerVisible(false);
   };
 
   const handleLogout = () => {
@@ -67,44 +57,70 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
 
   const profileMenu = (
     <Menu style={{ width: 200 }}>
-      {/* <Menu.Item
-        key="profile"
-        icon={<UserOutlined />}
-        onClick={() => handleNavigation("/profile")}
-      >
-        Profile
-      </Menu.Item> */}
-
-      <Menu.Item
-        key="Orders"
-        icon={<UnorderedListOutlined />}
-        onClick={() => handleNavigation("/user/orders")}
-      >
-        Orders
-      </Menu.Item>
-
-      <Menu.Item
-        key="Cart"
-        icon={<ShoppingCartOutlined />}
-        onClick={() => handleNavigation("/user/myCart")}
-      >
-        Cart
-      </Menu.Item>
-      <Menu.Item
-        key="wallet"
-        icon={<WalletOutlined />}
-        onClick={() => handleNavigation("/user/wallet")}
-      >
-        Wallet
-      </Menu.Item>
-
-      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
-        Logout
-      </Menu.Item>
+      {isMobile ? (
+        <>
+          <Menu.Item
+            key="profile"
+            icon={<UserOutlined />}
+            onClick={() => handleNavigation("/profile")}
+          >
+            Profile
+          </Menu.Item>
+          <Menu.Item
+            key="help"
+            icon={<QuestionCircleOutlined />}
+          >
+            Help & Support
+          </Menu.Item>
+          <Menu.Item
+            key="logout"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Menu.Item>
+        </>
+      ) : (
+        <>
+          <Menu.Item
+            key="Orders"
+            icon={<UnorderedListOutlined />}
+            onClick={() => handleNavigation("/user/orders")}
+          >
+            Orders
+          </Menu.Item>
+          <Menu.Item
+            key="Cart"
+            icon={<ShoppingCartOutlined />}
+            onClick={() => handleNavigation("/user/myCart")}
+          >
+            Cart
+          </Menu.Item>
+          <Menu.Item
+            key="wallet"
+            icon={<WalletOutlined />}
+            onClick={() => handleNavigation("/user/wallet")}
+          >
+            Wallet
+          </Menu.Item>
+          <Menu.Item
+            key="help"
+            icon={<QuestionCircleOutlined />}
+            onClick={() => handleNavigation("/user/help-support")}
+          >
+            Help & Support
+          </Menu.Item>
+          <Menu.Item
+            key="logout"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Menu.Item>
+        </>
+      )}
     </Menu>
   );
-
-  
 
   return (
     <>
@@ -188,6 +204,47 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
         </Row>
       </Header>
 
+      {/* Mobile Bottom Footer */}
+      {isMobile && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            width: "100%",
+            backgroundColor: "rgb(1, 0, 128)",
+            borderTop: "1px solid #ccc",
+            zIndex: 999,
+          }}
+        >
+          <Row justify="space-around" align="middle" style={{ padding: "8px 0" }}>
+            <Col onClick={() => handleNavigation("/user/select-canteen")}>
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <HomeOutlined style={{ fontSize: "22px", color: "white" }} />
+                <div style={{ fontSize: "12px", color: "white" }}>Home</div>
+              </div>
+            </Col>
+            <Col onClick={() => handleNavigation("/user/orders")}>
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <UnorderedListOutlined style={{ fontSize: "22px", color: "white" }} />
+                <div style={{ fontSize: "12px", color: "white" }}>Orders</div>
+              </div>
+            </Col>
+            <Col onClick={() => handleNavigation("/user/myCart")}>
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <ShoppingCartOutlined style={{ fontSize: "22px", color: "white" }} />
+                <div style={{ fontSize: "12px", color: "white" }}>Cart</div>
+              </div>
+            </Col>
+            <Col onClick={() => handleNavigation("/user/wallet")}>
+              <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <WalletOutlined style={{ fontSize: "22px", color: "white" }} />
+                <div style={{ fontSize: "12px", color: "white" }}>Wallet</div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      )}
+
       <Drawer
         title="Menu"
         placement="right"
@@ -196,13 +253,19 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
         width={250}
       >
         <Menu mode="vertical" style={{ border: "none" }}>
-          <Menu.Divider />
           <Menu.Item
             key="profile"
             icon={<UserOutlined />}
             onClick={() => handleNavigation("/profile")}
           >
             Profile
+          </Menu.Item>
+          <Menu.Item
+            key="help"
+            icon={<QuestionCircleOutlined />}
+            onClick={() => handleNavigation("/user/help-support")}
+          >
+            Help & Support
           </Menu.Item>
           <Menu.Item
             key="logout"
