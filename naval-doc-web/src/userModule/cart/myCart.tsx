@@ -346,7 +346,7 @@ const MyCart: React.FC = () => {
               position: "fixed",
               left: 0,
               right: 0,
-              bottom: 0,
+              bottom: "56px",
               zIndex: 100,
               background: "transparent",
               padding: "0 0 12px 0",
