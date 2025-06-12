@@ -14,6 +14,7 @@ import {
   Spin,
   Tag,
   Typography,
+  Grid,
 } from "antd";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
@@ -27,16 +28,17 @@ import { CreateMenuPayload, Item, MenuConfiguration } from "./types";
 import Loader from "../../components/common/loader";
 import { toastError } from "../../components/common/toasterMessage";
 
+const { useBreakpoint } = Grid;
+const { Option } = Select;
+const { TextArea } = Input;
+const { Text } = Typography;
+
 interface AddMenuModalProps {
   visible: boolean;
   onCancel: () => void;
   onSuccess: () => void;
   existingMenuTypes: any;
 }
-
-const { Option } = Select;
-const { TextArea } = Input;
-const { Text } = Typography;
 
 const AddMenuModal: React.FC<AddMenuModalProps> = ({
   visible,
@@ -45,15 +47,14 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 }) => {
   const [form] = Form.useForm();
   const [items, setItems] = useState<Item[]>([]);
-  const [menuConfigurations, setMenuConfigurations] = useState<
-    MenuConfiguration[]
-  >([]);
+  const [menuConfigurations, setMenuConfigurations] = useState<MenuConfiguration[]>([]);
   const [canteens, setCanteens] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [loadingItems, setLoadingItems] = useState<boolean>(false);
   const [loadingConfigs, setLoadingConfigs] = useState<boolean>(false);
   const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const screens = useBreakpoint();
 
   useEffect(() => {
     if (visible) {
@@ -181,11 +182,17 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     }
   };
 
+  // Responsive layout configurations
+  const modalWidth = screens.xl ? 1000 : screens.lg ? 900 : screens.md ? 800 : '100%';
+  const cardSpan = screens.xs ? 24 : 12;
+  const datePickerSpan = screens.xs ? 24 : screens.sm ? 12 : 8;
+  const formItemLayout = screens.xs ? { labelCol: { span: 24 }, wrapperCol: { span: 24 } } : {};
+
   return (
     <Modal
       title="Add Menu"
       open={visible}
-      width={1000}
+      width={modalWidth}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
@@ -201,7 +208,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         </Button>,
       ]}
       styles={{
-        body: { maxHeight: "80vh", overflow: "auto", padding: "24px" },
+        body: { 
+          maxHeight: "80vh", 
+          overflow: "auto", 
+          padding: screens.xs ? "16px" : "24px" 
+        },
       }}
     >
       <Form
@@ -217,22 +228,24 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         }}
       >
         <Row gutter={16}>
-          <Col span={16}>
+          <Col xs={24} md={16}>
             <Form.Item
               name="description"
               label="Description"
               rules={[
                 { required: true, message: "Please enter a description" },
               ]}
+              {...formItemLayout}
             >
               <TextArea rows={2} placeholder="Menu description" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={24} md={8}>
             <Form.Item
               name="canteenId"
               label="Select Canteen"
               rules={[{ required: true, message: "Please select a canteen" }]}
+              {...formItemLayout}
             >
               {loadingCanteens ? (
                 <Spin size="small" />
@@ -250,29 +263,32 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         </Row>
 
         <Row gutter={16}>
-          <Col span={8}>
+          <Col xs={datePickerSpan} sm={datePickerSpan} md={datePickerSpan}>
             <Form.Item
               name="startDate"
               label="Booking Start Date"
               rules={[{ required: true, message: "Please select start date" }]}
+              {...formItemLayout}
             >
               <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={datePickerSpan} sm={datePickerSpan} md={datePickerSpan}>
             <Form.Item
               name="endDate"
               label="Booking End Date"
               rules={[{ required: true, message: "Please select end date" }]}
+              {...formItemLayout}
             >
               <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col xs={datePickerSpan} sm={datePickerSpan} md={datePickerSpan}>
             <Form.Item
               name="menuType"
               label="Assign To"
               rules={[{ required: true, message: "Please select a meal type" }]}
+              {...formItemLayout}
             >
               {loadingConfigs ? (
                 <Spin size="small" />
@@ -311,11 +327,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
               <Spin />
             </div>
           ) : (
-            <div style={{ maxHeight: "400px", marginTop: "16px" }}>
+            <div style={{ marginTop: "16px" }}>
               <Row gutter={[16, 16]}>
                 {items.map((item) => {
                   return (
-                    <Col span={12} key={item.id}>
+                    <Col xs={24} sm={cardSpan} key={item.id}>
                       <Card
                         size="small"
                         style={{
@@ -326,24 +342,36 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                             ? "#e6f7ff"
                             : "#fff",
                         }}
-                        styles={{ body: { padding: "16px" } }}
+                        styles={{ body: { padding: screens.xs ? "12px" : "16px" } }}
                       >
                         <div
-                          style={{ display: "flex", alignItems: "flex-start" }}
+                          style={{ 
+                            display: "flex", 
+                            alignItems: "flex-start",
+                            flexDirection: screens.xs ? "column" : "row"
+                          }}
                         >
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
                             onChange={(e) =>
                               handleItemSelect(item.id, e.target.checked)
                             }
-                            style={{ marginTop: "4px" }}
+                            style={{ 
+                              marginTop: "4px",
+                              marginBottom: screens.xs ? "8px" : 0
+                            }}
                           />
-                          <div style={{ marginLeft: "8px", flex: 1 }}>
+                          <div style={{ 
+                            marginLeft: screens.xs ? 0 : "8px", 
+                            flex: 1,
+                            width: screens.xs ? "100%" : "auto"
+                          }}>
                             <div
                               style={{
                                 display: "flex",
                                 justifyContent: "space-between",
-                                alignItems: "center",
+                                flexDirection: screens.xs ? "column" : "row",
+                                alignItems: screens.xs ? "flex-start" : "center"
                               }}
                             >
                               <Text strong>{item.name}</Text>
@@ -351,6 +379,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
+                                  marginTop: screens.xs ? "4px" : 0
                                 }}
                               >
                                 <Tag
@@ -399,12 +428,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 
                             {selectedItems.includes(item.id) && (
                               <Row gutter={8} style={{ marginTop: "12px" }}>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                   <Form.Item
                                     name={`min_${item.id}`}
                                     label="Min Allowed Booking Per Person"
                                     initialValue={1}
                                     style={{ marginBottom: 0 }}
+                                    {...formItemLayout}
                                   >
                                     <Input
                                       disabled
@@ -413,12 +443,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                                     />
                                   </Form.Item>
                                 </Col>
-                                <Col span={12}>
+                                <Col xs={24} sm={12}>
                                   <Form.Item
                                     name={`max_${item.id}`}
                                     label="Max Allowed Booking Per Person"
                                     initialValue={10}
                                     style={{ marginBottom: 0 }}
+                                    {...formItemLayout}
                                   >
                                     <InputNumber
                                       min={1}

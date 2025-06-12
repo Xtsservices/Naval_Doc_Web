@@ -71,58 +71,70 @@ const ProfileDetails: React.FC = () => {
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
     marginBottom: "20px",
     width: "100%",
+    maxWidth: "100%",
+    overflow: "hidden", // Prevent content from overflowing
   };
 
   const titleStyle: React.CSSProperties = {
     color: "#2657BC",
-    fontSize: "22px",
+    fontSize: "clamp(18px, 4vw, 22px)", // Responsive font size
     fontWeight: 700,
-    marginBottom: "26px",
+    marginBottom: "20px",
     textAlign: "center",
   };
 
   const fieldStyle: React.CSSProperties = {
-    marginBottom: "30px",
+    marginBottom: "20px",
     fontSize: "14px",
   };
 
   const labelStyle: React.CSSProperties = {
     color: "#333",
-    fontSize: "18px",
+    fontSize: "clamp(14px, 3.5vw, 16px)", // Responsive font size
     fontWeight: "bold",
     textAlign: "left",
     display: "block",
     wordBreak: "break-word",
+    marginBottom: "4px", // Add space for mobile stacked layout
   };
 
   const valueStyle: React.CSSProperties = {
     color: "#666",
-    fontSize: "18px",
-    wordBreak: "break-word", // Prevents text overflow
+    fontSize: "clamp(14px, 3.5vw, 16px)", // Responsive font size
+    wordBreak: "break-word",
   };
 
-  const colLabelStyle: React.CSSProperties = {
-    textAlign: "left",
-    paddingLeft: "20px",
+  // Enhanced responsive layout logic
+  const getResponsiveLayout = () => {
+    if (window.innerWidth < 576) {
+      // Mobile: Stack labels above values
+      return {
+        labelCol: { span: 24 },
+        valueCol: { span: 24 },
+        showSeparator: false,
+        containerStyle: { padding: "12px" },
+      };
+    } else if (window.innerWidth < 768) {
+      // Small tablets
+      return {
+        labelCol: { span: 10 },
+        valueCol: { span: 14 },
+        showSeparator: false,
+        containerStyle: { padding: "16px" },
+      };
+    } else {
+      // Desktop and large tablets
+      return {
+        labelCol: { span: 6 },
+        valueCol: { span: 17 },
+        separatorCol: { span: 1 },
+        showSeparator: true,
+        containerStyle: { padding: "16px" },
+      };
+    }
   };
 
-  const colValueStyle: React.CSSProperties = {
-    textAlign: "left",
-  };
-
-  // Use responsive column sizes
-  const getColSpans = () => {
-    // For screens smaller than 576px
-    const xs = { labelSpan: 24, valueSpan: 24, separatorSpan: 0 };
-    // For screens 576px and larger (sm)
-    const sm = { labelSpan: 8, valueSpan: 15, separatorSpan: 1 };
-    // For screens 992px and larger (lg)
-    const lg = { labelSpan: 5, valueSpan: 18, separatorSpan: 1 };
-
-    return { xs, sm, lg };
-  };
-
-  const colSpans = getColSpans();
+  const layout = getResponsiveLayout();
 
   // Field definitions for both viewing and editing mode
   const profileFields = [
@@ -135,7 +147,7 @@ const ProfileDetails: React.FC = () => {
           rules={[{ required: true, message: "Please enter your name" }]}
           style={{ margin: 0 }}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
       ),
     },
@@ -148,7 +160,7 @@ const ProfileDetails: React.FC = () => {
           rules={[{ required: true, message: "Please select your gender" }]}
           style={{ margin: 0 }}
         >
-          <Select>
+          <Select size="large">
             <Select.Option value="Male">Male</Select.Option>
             <Select.Option value="Female">Female</Select.Option>
             <Select.Option value="Other">Other</Select.Option>
@@ -167,7 +179,7 @@ const ProfileDetails: React.FC = () => {
           ]}
           style={{ margin: 0 }}
         >
-          <DatePicker style={{ width: "100%" }} />
+          <DatePicker size="large" style={{ width: "100%" }} />
         </Form.Item>
       ),
     },
@@ -186,7 +198,7 @@ const ProfileDetails: React.FC = () => {
           ]}
           style={{ margin: 0 }}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
       ),
     },
@@ -202,153 +214,147 @@ const ProfileDetails: React.FC = () => {
           ]}
           style={{ margin: 0 }}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
       ),
     },
   ];
 
   return (
-    <Card style={cardStyle} styles={{body:{ padding: "16px" }}}>
-      <Typography.Title level={4} style={titleStyle}>
-        Profile Details
-      </Typography.Title>
+    <div style={{ padding: "8px", maxWidth: "100vw", overflow: "hidden" }}>
+      <Card style={cardStyle} styles={{ body: layout.containerStyle }}>
+        <Typography.Title level={4} style={titleStyle}>
+          Profile Details
+        </Typography.Title>
 
-      {!isEditing ? (
-        // View mode
-        <>
-          {profileFields.map((field, index) => (
-            <Row key={index} style={fieldStyle} gutter={[16, 8]}>
-              <Col
-                xs={colSpans.xs.labelSpan}
-                sm={colSpans.sm.labelSpan}
-                lg={colSpans.lg.labelSpan}
-                style={colLabelStyle}
+        {!isEditing ? (
+          // View mode
+          <>
+            {profileFields.map((field, index) => (
+              <Row key={index} style={fieldStyle} gutter={[8, 4]}>
+                <Col {...layout.labelCol} style={{ paddingLeft: "4px" }}>
+                  <Text style={labelStyle}>{field.label}</Text>
+                </Col>
+
+                {/* Separator - only show on desktop */}
+                {layout.showSeparator && layout.separatorCol && (
+                  <Col {...layout.separatorCol} style={{ textAlign: "center" }}>
+                    <Text style={valueStyle}>:-</Text>
+                  </Col>
+                )}
+
+                <Col {...layout.valueCol}>
+                  <Text style={valueStyle}>{field.value}</Text>
+                </Col>
+              </Row>
+            ))}
+
+            <div
+              style={{
+                textAlign: "right",
+                marginTop: "24px",
+                borderTop: "1px solid #e0e0e0",
+                paddingTop: "16px",
+              }}
+            >
+              <Button
+                type="text"
+                onClick={handleEdit}
+                size="large"
+                style={{
+                  color: "#2657BC",
+                  padding: "8px 20px",
+                  height: "auto",
+                  fontSize: "clamp(14px, 3.5vw, 16px)",
+                  border: "1px solid #2657BC",
+                  fontWeight: "500",
+                  minWidth: "80px",
+                }}
               >
-                <Text style={labelStyle}>{field.label}</Text>
-              </Col>
-
-              {/* Separator - hidden on mobile */}
-              <Col
-                xs={colSpans.xs.separatorSpan}
-                sm={colSpans.sm.separatorSpan}
-                lg={colSpans.lg.separatorSpan}
-                style={{ textAlign: "center" }}
-              >
-                <Text style={valueStyle}>:-</Text>
-              </Col>
-
-              <Col
-                xs={colSpans.xs.valueSpan}
-                sm={colSpans.sm.valueSpan}
-                lg={colSpans.lg.valueSpan}
-                style={colValueStyle}
-              >
-                <Text style={valueStyle}>{field.value}</Text>
-              </Col>
-            </Row>
-          ))}
-
-          <div
-            style={{
-              textAlign: "right",
-              marginTop: "30px",
-              borderTop: "2px solid rgb(208 197 197)",
-              paddingTop: "16px",
-            }}
+                Edit
+              </Button>
+            </div>
+          </>
+        ) : (
+          // Edit mode
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            style={{ marginTop: "8px" }}
           >
-            <Button
-              type="text"
-              onClick={handleEdit}
+            {profileFields.map((field, index) => (
+              <div key={index} style={{ marginBottom: "20px" }}>
+                {window.innerWidth < 768 ? (
+                  // Mobile/Tablet: Vertical layout
+                  <div>
+                    <Text style={{ ...labelStyle, marginBottom: "8px" }}>
+                      {field.label}
+                    </Text>
+                    {field.editField}
+                  </div>
+                ) : (
+                  // Desktop: Horizontal layout
+                  <Row gutter={[16, 8]} align="middle">
+                    <Col {...layout.labelCol} style={{ paddingLeft: "4px" }}>
+                      <Text style={labelStyle}>{field.label}</Text>
+                    </Col>
+
+                    {layout.showSeparator && layout.separatorCol && (
+                      <Col {...layout.separatorCol} style={{ textAlign: "center" }}>
+                        <Text style={valueStyle}>:-</Text>
+                      </Col>
+                    )}
+
+                    <Col {...layout.valueCol}>
+                      {field.editField}
+                    </Col>
+                  </Row>
+                )}
+              </div>
+            ))}
+
+            <div
               style={{
-                color: "#2657BC",
-                padding: "4px 16px",
-                height: "auto",
-                fontSize: "18px",
-                border: "1px solid #2657BC",
-                fontWeight: "500",
+                textAlign: "right",
+                marginTop: "20px",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "12px",
+                flexWrap: "wrap",
               }}
             >
-              Edit
-            </Button>
-          </div>
-        </>
-      ) : (
-        // Edit mode
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          style={{ marginTop: "8px" }}
-        >
-          {profileFields.map((field, index) => (
-            <Row key={index} style={fieldStyle} gutter={[16, 8]} align="middle">
-              <Col
-                xs={colSpans.xs.labelSpan}
-                sm={colSpans.sm.labelSpan}
-                lg={colSpans.lg.labelSpan}
-                style={colLabelStyle}
+              <Button
+                onClick={handleCancel}
+                size="large"
+                style={{
+                  padding: "8px 20px",
+                  height: "auto",
+                  fontSize: "clamp(14px, 3.5vw, 16px)",
+                  minWidth: "80px",
+                }}
               >
-                <Text style={labelStyle}>{field.label}</Text>
-              </Col>
-
-              {/* Separator - hidden on mobile */}
-              <Col
-                xs={colSpans.xs.separatorSpan}
-                sm={colSpans.sm.separatorSpan}
-                lg={colSpans.lg.separatorSpan}
-                style={{ textAlign: "center" }}
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                style={{
+                  background: "#2657BC",
+                  padding: "8px 20px",
+                  height: "auto",
+                  fontSize: "clamp(14px, 3.5vw, 16px)",
+                  minWidth: "80px",
+                }}
               >
-                <Text style={valueStyle}>:-</Text>
-              </Col>
-
-              <Col
-                xs={colSpans.xs.valueSpan}
-                sm={colSpans.sm.valueSpan}
-                lg={colSpans.lg.valueSpan}
-                style={colValueStyle}
-              >
-                {field.editField}
-              </Col>
-            </Row>
-          ))}
-
-          <div
-            style={{
-              textAlign: "right",
-              marginTop: "16px",
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "8px",
-              flexWrap: "wrap",
-            }}
-          >
-            <Button
-              onClick={handleCancel}
-              style={{
-                padding: "4px 16px",
-                height: "auto",
-                fontSize: "14px",
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                background: "#2657BC",
-                padding: "4px 16px",
-                height: "auto",
-                fontSize: "14px",
-              }}
-            >
-              Save
-            </Button>
-          </div>
-        </Form>
-      )}
-    </Card>
+                Save
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Card>
+    </div>
   );
 };
 
