@@ -317,6 +317,9 @@ const LoginScreen: React.FC = () => {
                           <Input
                             key={index}
                             ref={(el: any) => (otpRefs.current[index] = el)}
+                            type="tel"  
+                            inputMode="numeric" 
+                            pattern="[0-9]*" 
                             maxLength={1}
                             style={{
                               width: "40px",
