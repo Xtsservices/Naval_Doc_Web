@@ -20,8 +20,8 @@ import {
   ClockCircleOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import { adminDashboardService, menuService } from "../../auth/apiService";
-import { Menu } from "./types";
+import { adminDashboardService, menuConfigService, menuService } from "../../auth/apiService";
+import { Menu, MenuTiming } from "./types";
 import AddMenuModal from "./addMenuModal";
 import EditMenuModal from "./editMenuModal";
 import ViewMenuModal from "./viewMenuModal";
@@ -49,10 +49,12 @@ const MenuList: React.FC = () => {
   const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(
     []
   );
+const [menuConfigurationTimings, setMenuConfigurationTimings] = useState<MenuTiming[]>([]);           
+
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isSmallMobile, setIsSmallMobile] = useState<boolean>(false);
   const route = useParams();
-
+console.log("menuConfigurationTimings",menuConfigurationTimings);
   useEffect(() => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
@@ -67,6 +69,7 @@ const MenuList: React.FC = () => {
 
   useEffect(() => {
     fetchMenus();
+    fetchMenuConfigurationTimings()
   }, []);
 
   useEffect(() => {
@@ -79,6 +82,16 @@ const MenuList: React.FC = () => {
       setExistingMenuTypes([]);
     }
   }, [menus]);
+
+  const fetchMenuConfigurationTimings = async () => {
+    console.log("first,fetchMenuConfigurationTimings");
+   const configs = await menuConfigService.getAllMenuConfigurations();
+          if (!configs || !configs.data) {
+            return;
+          }
+          
+      setMenuConfigurationTimings(configs?.data || [])
+  }
 
   const fetchMenus = async () => {
     try {
@@ -154,6 +167,7 @@ const MenuList: React.FC = () => {
   };
 
   const formatDate = (timestamp: number) => {
+    if (!timestamp) return "N/A";
     return dayjs(timestamp * 1000).format("hh:mm A");
   };
 
@@ -175,13 +189,15 @@ const MenuList: React.FC = () => {
     return "48px 24px";
   };
 
+  console.log("first,",menus)
   return (
     <div 
-      style={{ 
-        padding: isSmallMobile ? "8px" : isMobile ? "12px" : "16px",
-        maxWidth: "100%",
-        overflow: "hidden",
-      }}
+       style={{
+          maxWidth: "100%",
+          marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
+          marginRight: window.innerWidth <= 768 ? "8px" : "25px",
+          padding: window.innerWidth <= 480 ? "0 4px" : "0",
+        }}
     >
       {/* Header Section */}
       <div
@@ -308,11 +324,11 @@ const MenuList: React.FC = () => {
                   <img
                     alt={menu.name}
                     src={
-                      menu?.menuMenuConfiguration?.name === "Lunch"
+                      menu?.name === "Lunch"
                         ? lunchImage
-                        : menu?.menuMenuConfiguration?.name === "Snack"
+                        : menu?.name === "Snack"
                         ? snacksImage
-                        : menu?.menuMenuConfiguration?.name === "Breakfast"
+                        : menu?.name === "Breakfast"
                         ? tiffinImage
                         : lunchImage
                     }
@@ -374,7 +390,7 @@ const MenuList: React.FC = () => {
                 </div>
 
                 {/* Time Display */}
-                {!route?.canteenId && (
+                {route?.canteenId && (
                   <div style={{ textAlign: "center", marginBottom: "12px" }}>
                     <Space
                       direction="vertical"
@@ -401,13 +417,19 @@ const MenuList: React.FC = () => {
                             textAlign: "center",
                           }}
                         >
-                          {formatDate(
-                            menu?.menuMenuConfiguration?.defaultStartTime ?? 0
+                          {/* {formatDate(
+                            menu?.defaultStartTime ?? 0
                           )}
                           {" - "}
                           {formatDate(
-                            menu?.menuMenuConfiguration?.defaultEndTime ?? 0
-                          )}
+                            menu?.defaultEndTime ?? 0
+                          )} */}
+                            {menuConfigurationTimings
+                            ?.filter((eachTime) => eachTime.name === menu?.name)
+                            ?.map((eachTime) => (
+                              `${formatDate(eachTime.defaultStartTime)} - ${formatDate(eachTime.defaultEndTime)}`
+                            ))
+                            ?.join(", ")}
                         </Text>
                       </div>
                     </Space>

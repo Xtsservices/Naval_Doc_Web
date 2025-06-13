@@ -23,6 +23,7 @@ import AddItemModal from "./addItemModal";
 import { itemService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import Loader from "../../components/common/loader";
+import { formatUnixToISTDate } from "../../utils/data";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
@@ -113,6 +114,7 @@ const ItemsList: React.FC = () => {
   };
 
   const handleViewItem = (item: ItemProps) => {
+    console.log("first item", item);
     setSelectedItem(item);
     setViewModalVisible(true);
   };
@@ -189,13 +191,16 @@ const ItemsList: React.FC = () => {
     </div>
   );
 
+  console.log("Items:", selectedItem);
+
   return (
     <Layout>
       <Content
-        style={{
+         style={{
           maxWidth: "100%",
-          margin: "0 auto",
-          padding: "0 16px",
+          marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
+          marginRight: window.innerWidth <= 768 ? "8px" : "25px",
+          padding: window.innerWidth <= 480 ? "0 4px" : "0",
         }}
       >
         <BackHeader path="/dashboard" title="Items Management" />
@@ -476,22 +481,14 @@ const ItemsList: React.FC = () => {
                 <Col xs={24} sm={12}>
                   <Text strong>Start Date:</Text>
                   <p style={{ marginTop: 4, fontSize: "14px" }}>
-                    {selectedItem.startDate
-                      ? new Date(
-                          parseInt(selectedItem.startDate)
-                        ).toLocaleDateString()
-                      : "N/A"}
+                    {formatUnixToISTDate(selectedItem.startDate)}
                   </p>
                 </Col>
 
                 <Col xs={24} sm={12}>
                   <Text strong>End Date:</Text>
                   <p style={{ marginTop: 4, fontSize: "14px" }}>
-                    {selectedItem.endDate
-                      ? new Date(
-                          parseInt(selectedItem.endDate)
-                        ).toLocaleDateString()
-                      : "N/A"}
+                    {formatUnixToISTDate(selectedItem.endDate)}
                   </p>
                 </Col>
 

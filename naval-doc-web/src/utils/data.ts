@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 type LanguageTexts = {
   [key in "en" | "te"]: {
     login: string;
@@ -63,4 +65,54 @@ export const languageTexts: LanguageTexts = {
     worldtek: "వరల్డ్టెక్",
     languageLabel: "భాష",
   },
+};
+
+
+export const formatUnixToISTDateTime = (unixTime: number | string): string => {
+  if (!unixTime) return '-';
+
+  const timestamp = typeof unixTime === 'string' ? parseInt(unixTime, 10) : unixTime;
+  if (isNaN(timestamp)) return 'Invalid timestamp';
+
+  const date = new Date(timestamp * 1000); // convert to ms
+  return date.toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+};
+
+export const formatUnixToISTDate = (unixTime: number | string): string => {
+  if (!unixTime) return '-';
+
+  const timestamp = typeof unixTime === 'string' ? parseInt(unixTime, 10) : unixTime;
+  if (isNaN(timestamp)) return 'Invalid timestamp';
+
+  const date = new Date(timestamp * 1000); // convert to ms
+  return date.toLocaleDateString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+};
+
+export const formatUnixToISTTime = (unixTime: number | string): string => {
+  if (!unixTime) return '-';
+
+  const timestamp = typeof unixTime === 'string' ? parseInt(unixTime, 10) : unixTime;
+  if (isNaN(timestamp)) return 'Invalid timestamp';
+
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleTimeString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
 };

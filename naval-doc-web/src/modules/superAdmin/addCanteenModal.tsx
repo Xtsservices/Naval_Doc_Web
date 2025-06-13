@@ -37,8 +37,11 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
   const [fileList, setFileList] = useState<any[]>([]);
 
   const handleOk = async () => {
+    console.log("first",100)
     try {
       const values = await form.validateFields();
+      console.log("firstName", values);
+      return
       setLoading(true);
       const formData = new FormData();
       formData.append("canteenName", values.canteenName.trim());
@@ -81,8 +84,11 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     height: "40px",
   };
 
-  const handleFileChange = ({ fileList }: any) => {
+  const handleFileChange = async({ fileList }: any) => {
+    console.log("sample enter")
     setFileList(fileList);
+    await form.validateFields();
+     return Promise.resolve();
   };
 
   const validateFileUpload = () => {
@@ -119,6 +125,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     return Promise.resolve();
   };
 
+  
 
   return (
     <Modal
@@ -302,8 +309,9 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                     message.error("You can only upload image files!");
                   }
                   const isLt2M = file.size / 1024 / 1024 < 2;
+                  console.log("isLt2M",isLt2M)
                   if (!isLt2M) {
-                    message.error("Image must be smaller than 2MB!");
+                    message.error("Image must be smaller than 2MB!===");
                   }
                   return false;
                 }}
