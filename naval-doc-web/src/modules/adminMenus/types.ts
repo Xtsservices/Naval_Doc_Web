@@ -33,6 +33,18 @@ export interface Item {
     item?: Item;
   }
   
+export interface MenuTiming {
+  id: number;
+  name: string;
+  defaultStartTime: number;
+  defaultEndTime: number;
+  status: string;
+  createdById: number | null;
+  updatedById: number | null;
+  createdAt: number;
+  updatedAt: number;
+}
+
   // Menu interface
   export interface Menu {
     id: number;

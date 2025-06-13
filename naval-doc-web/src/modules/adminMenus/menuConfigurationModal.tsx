@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Loader from "../../components/common/loader";
 import { toastError } from "../../components/common/toasterMessage";
+import { formatUnixToISTTime } from "../../utils/data";
 
 dayjs.extend(customParseFormat);
 
@@ -90,6 +91,8 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
     setLoading(true);
     setError(null);
 
+    console.log("first", startTime, endTime,name);
+return
     try {
       await menuConfigService.createMenuConfiguration({
         name,
@@ -160,13 +163,17 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
                         }}
                       />
                       <Text type="secondary" style={{ fontSize: "12px" }}>
-                        {dayjs
+                        {formatUnixToISTTime(
+                          config.defaultStartTime)}
+                        {/* {dayjs
                           .unix(Number(config.defaultStartTime))
-                          .format("HH:mm")}{" "}
+                          .format("HH:mm")}{" "} */}
                         -{" "}
-                        {dayjs
+ {formatUnixToISTTime(
+                          config.defaultEndTime)}
+                        {/* {dayjs
                           .unix(Number(config.defaultEndTime))
-                          .format("HH:mm")}
+                          .format("HH:mm")} */}
                       </Text>
                     </div>
                   </Card>

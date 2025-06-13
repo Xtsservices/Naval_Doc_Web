@@ -23,6 +23,7 @@ import AddItemModal from "./addItemModal";
 import { itemService } from "../../auth/apiService";
 import BackHeader from "../../components/common/backHeader";
 import Loader from "../../components/common/loader";
+import { formatUnixToISTDate } from "../../utils/data";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
@@ -113,6 +114,7 @@ const ItemsList: React.FC = () => {
   };
 
   const handleViewItem = (item: ItemProps) => {
+    console.log("first item", item);
     setSelectedItem(item);
     setViewModalVisible(true);
   };
@@ -165,7 +167,8 @@ const ItemsList: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px 0",
+        padding: "40px 20px",
+        textAlign: "center",
       }}
     >
       <Empty
@@ -178,19 +181,26 @@ const ItemsList: React.FC = () => {
         icon={<PlusOutlined />}
         onClick={handleAddItem}
         size="large"
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+        }}
       >
         Add Your First Item
       </Button>
     </div>
   );
 
+  console.log("Items:", selectedItem);
+
   return (
     <Layout>
       <Content
-        style={{
+         style={{
           maxWidth: "100%",
-          marginLeft: "25px",
-          marginRight: "25px",
+          marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
+          marginRight: window.innerWidth <= 768 ? "8px" : "25px",
+          padding: window.innerWidth <= 480 ? "0 4px" : "0",
         }}
       >
         <BackHeader path="/dashboard" title="Items Management" />
@@ -200,12 +210,14 @@ const ItemsList: React.FC = () => {
         ) : items.length === 0 ? (
           <EmptyState />
         ) : (
-          <Row gutter={[16, 16]}>
-            <Col xs={12} sm={8} md={6} lg={4}>
+          <Row gutter={[12, 16]} style={{ margin: 0 }}>
+            {/* Add Item Card - Responsive sizing */}
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
               <Card
                 hoverable
                 style={{
                   height: "100%",
+                  minHeight: "200px",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -222,53 +234,73 @@ const ItemsList: React.FC = () => {
                   justifyContent: "center",
                   height: "100%",
                   width: "100%",
-                  padding: "30px",
+                  padding: "20px",
                 }}}
                 onClick={handleAddItem}
               >
                 <div style={{ marginBottom: "8px" }}>
                   <PlusOutlined
-                    style={{ fontSize: "32px", color: "#52c41a" }}
+                    style={{ fontSize: "28px", color: "#52c41a" }}
                   />
                 </div>
-                <Typography.Text strong>Add New Item</Typography.Text>
+                <Typography.Text strong style={{ fontSize: "14px" }}>
+                  Add New Item
+                </Typography.Text>
               </Card>
             </Col>
+            
+            {/* Item Cards - Responsive sizing */}
             {items.map((item) => (
               <Col
-                xs={12}
-                sm={8}
-                md={6}
-                lg={4}
+                xs={24}
+                sm={12}
+                md={8}
+                lg={6}
+                xl={4}
                 key={item.id}
-                style={{ paddingLeft: "12px", paddingRight: "12px" }}
               >
                 <Card
                   hoverable
                   className="item-card-meta"
-                  style={{ height: "100%" }}
+                  style={{ 
+                    height: "100%",
+                    minHeight: "280px",
+                  }}
                   cover={
                     <img
                       alt={item.name}
                       src={item.image}
                       style={{
-                        height: "150px",
+                        height: "140px",
+                        width: "100%",
                         objectFit: "cover",
                       }}
                     />
                   }
                 >
                   <Card.Meta
-                    style={{ padding: "9px" }}
+                    style={{ padding: "8px" }}
                     title={
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: "center",
+                          justifyContent: "space-between",
                           alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: "4px",
                         }}
                       >
-                        <span style={{ marginRight: "7px" }}>
+                        <span 
+                          style={{ 
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            flex: 1,
+                            minWidth: 0,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           {item?.name
                             ? item.name.charAt(0).toUpperCase() +
                               item.name.slice(1)
@@ -280,15 +312,17 @@ const ItemsList: React.FC = () => {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            height: "26px",
-                            width: "26px",
+                            height: "22px",
+                            width: "22px",
                             padding: 0,
+                            margin: 0,
+                            flexShrink: 0,
                           }}
                         >
                           <span
                             style={{
-                              width: "10px",
-                              height: "10px",
+                              width: "8px",
+                              height: "8px",
                               borderRadius: "50%",
                               backgroundColor:
                                 item.type.toLowerCase() === "veg"
@@ -301,12 +335,22 @@ const ItemsList: React.FC = () => {
                       </div>
                     }
                     description={
-                      <div style={{ marginTop: 8, marginBottom: 12 , display:"flex", justifyContent:"center", alignItems:"center"}}>
-                        <Text strong style={{ fontSize: "16px" }}>
+                      <div 
+                        style={{ 
+                          marginTop: 6, 
+                          marginBottom: 8, 
+                          display: "flex", 
+                          justifyContent: "center", 
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: "4px",
+                        }}
+                      >
+                        <Text strong style={{ fontSize: "14px" }}>
                           {item.currency === "INR" ? "₹" : "$"}
                           {item.price}
                         </Text>
-                        <Text style={{ marginLeft: 8 }}>
+                        <Text style={{ fontSize: "12px", color: "#666" }}>
                           • {item.quantity} {item.quantityUnit}
                         </Text>
                       </div>
@@ -314,48 +358,51 @@ const ItemsList: React.FC = () => {
                   />
 
                   <Space 
-                      style={{ 
-                        width: '100%', 
-                        justifyContent: 'center', 
-                        marginTop: 17,
-                        borderTop: '1px solid #f0f0f0',
-                        paddingTop: 11
-                      }}
-                    >
-                      <Tooltip title="View Details">
-                        <Button 
-                          icon={<EyeOutlined />} 
-                          type="text" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewItem(item);
-                          }}
-                          style={{ color: '#1890ff' }}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Edit">
-                        <Button 
-                          icon={<EditOutlined />} 
-                          type="text" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditItem(item);
-                          }}
-                          style={{ color: '#52c41a' }}
-                        />
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <Button 
-                          icon={<DeleteOutlined />} 
-                          type="text" 
-                          danger 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteItem(item);
-                          }}
-                        />
-                      </Tooltip>
-                    </Space>
+                    style={{ 
+                      width: '100%', 
+                      justifyContent: 'center', 
+                      marginTop: 12,
+                      borderTop: '1px solid #f0f0f0',
+                      paddingTop: 8
+                    }}
+                  >
+                    <Tooltip title="View Details">
+                      <Button 
+                        icon={<EyeOutlined />} 
+                        type="text" 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewItem(item);
+                        }}
+                        style={{ color: '#1890ff' }}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                      <Button 
+                        icon={<EditOutlined />} 
+                        type="text" 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditItem(item);
+                        }}
+                        style={{ color: '#52c41a' }}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <Button 
+                        icon={<DeleteOutlined />} 
+                        type="text" 
+                        size="small"
+                        danger 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteItem(item);
+                        }}
+                      />
+                    </Tooltip>
+                  </Space>
                 </Card>
               </Col>
             ))}
@@ -378,7 +425,9 @@ const ItemsList: React.FC = () => {
               Close
             </Button>,
           ]}
-          width={600}
+          width="90%"
+          style={{ maxWidth: 600 }}
+          centered
         >
           {selectedItem && (
             <div>
@@ -388,18 +437,20 @@ const ItemsList: React.FC = () => {
                   alt={selectedItem.name}
                   style={{
                     maxWidth: "100%",
-                    maxHeight: 300,
+                    maxHeight: 250,
                     objectFit: "contain",
                   }}
                 />
               </div>
 
-              <Row gutter={[16, 16]}>
+              <Row gutter={[12, 12]}>
                 <Col span={24}>
-                  <Title level={4}>{selectedItem.name}</Title>
+                  <Title level={4} style={{ marginBottom: 8, fontSize: "18px" }}>
+                    {selectedItem.name}
+                  </Title>
                   <Tag
                     color={getTagColor(selectedItem.type)}
-                    style={{ marginBottom: 10 }}
+                    style={{ marginBottom: 12 }}
                   >
                     {selectedItem.type}
                   </Tag>
@@ -407,49 +458,43 @@ const ItemsList: React.FC = () => {
 
                 <Col span={24}>
                   <Text strong>Description:</Text>
-                  <p>{selectedItem.description}</p>
+                  <p style={{ marginTop: 4, fontSize: "14px" }}>
+                    {selectedItem.description}
+                  </p>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Text strong>Price:</Text>
-                  <p>
+                  <p style={{ marginTop: 4, fontSize: "14px" }}>
                     {selectedItem.currency === "INR" ? "₹" : "$"}
                     {selectedItem.price}
                   </p>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Text strong>Quantity:</Text>
-                  <p>
+                  <p style={{ marginTop: 4, fontSize: "14px" }}>
                     {selectedItem.quantity} {selectedItem.quantityUnit}
                   </p>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Text strong>Start Date:</Text>
-                  <p>
-                    {selectedItem.startDate
-                      ? new Date(
-                          parseInt(selectedItem.startDate)
-                        ).toLocaleDateString()
-                      : "N/A"}
+                  <p style={{ marginTop: 4, fontSize: "14px" }}>
+                    {formatUnixToISTDate(selectedItem.startDate)}
                   </p>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Text strong>End Date:</Text>
-                  <p>
-                    {selectedItem.endDate
-                      ? new Date(
-                          parseInt(selectedItem.endDate)
-                        ).toLocaleDateString()
-                      : "N/A"}
+                  <p style={{ marginTop: 4, fontSize: "14px" }}>
+                    {formatUnixToISTDate(selectedItem.endDate)}
                   </p>
                 </Col>
 
-                <Col span={12}>
+                <Col xs={24} sm={12}>
                   <Text strong>Status:</Text>
-                  <p>
+                  <p style={{ marginTop: 4 }}>
                     {selectedItem.status === "active" ? (
                       <Tag color="green">Active</Tag>
                     ) : (
@@ -467,6 +512,9 @@ const ItemsList: React.FC = () => {
           visible={editModalVisible}
           onCancel={() => setEditModalVisible(false)}
           footer={null}
+          width="90%"
+          style={{ maxWidth: 600 }}
+          centered
         >
           {selectedItem && (
             <p>Edit form would go here, populated with selectedItem data</p>
@@ -480,6 +528,9 @@ const ItemsList: React.FC = () => {
           onOk={confirmDelete}
           okText="Delete"
           okButtonProps={{ danger: true }}
+          width="90%"
+          style={{ maxWidth: 400 }}
+          centered
         >
           <p>
             Are you sure you want to delete "{selectedItem?.name}"? This action

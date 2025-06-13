@@ -128,7 +128,7 @@ const LoginScreen: React.FC = () => {
         const token = response?.data?.token;
         localStorage.setItem("Token", token);
         //this is admin numbers
-        const allowedNumbers = ["7093081518", "9392392143","9573575468"];
+        const allowedNumbers = ["7093081518", "9392392143","9573575468","9052519059"];
 
         if (
           response.status === 200 &&
@@ -317,6 +317,9 @@ const LoginScreen: React.FC = () => {
                           <Input
                             key={index}
                             ref={(el: any) => (otpRefs.current[index] = el)}
+                            type="tel"  
+                            inputMode="numeric" 
+                            pattern="[0-9]*" 
                             maxLength={1}
                             style={{
                               width: "40px",
