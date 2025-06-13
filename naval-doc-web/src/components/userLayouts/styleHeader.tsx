@@ -133,7 +133,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         gap: isMobile ? "16px" : "24px",
       }}
     >
-      <Popover
+      {/* <Popover
         content={
           <NotificationsDropdown
             notifications={notifications}
@@ -171,7 +171,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
           </Badge>
           {!isMobile && <span style={{ fontSize: "14px" }}>Notification</span>}
         </div>
-      </Popover>
+      </Popover> */}
 
       <Popover
         content={
