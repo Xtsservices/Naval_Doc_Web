@@ -1,11 +1,12 @@
 import { Col, Row, Form, Input, Button, message } from "antd";
 import axios from "axios";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, use } from "react";
 import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
 import { toastError, toastSuccess } from "../components/common/toasterMessage";
 import "/public/Naval1.png";
+import { useDispatch } from "react-redux";
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
@@ -14,7 +15,7 @@ const LoginScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [otpButtonDisabled, setOtpButtonDisabled] = useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   // Create refs for each OTP input field
   const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
@@ -128,12 +129,19 @@ const LoginScreen: React.FC = () => {
         const token = response?.data?.token;
         localStorage.setItem("Token", token);
         //this is admin numbers
-        const allowedNumbers = ["7093081518", "9392392143","9573575468","9052519059"];
+        const allowedNumbers = [
+          "7093081518",
+          "9392392143",
+          "9573575468",
+          "9052519059",
+        ];
 
         if (
           response.status === 200 &&
           response.data.message === "OTP verified successfully"
         ) {
+          console.log("currentUserData response.data",response.data)
+          dispatch({ type: "currentUserData", payload: response.data.data });
           if (allowedNumbers.includes(response.data.data.mobile)) {
             setTimeout(() => {
               navigate("/dashboard");
@@ -156,6 +164,7 @@ const LoginScreen: React.FC = () => {
         }
       } catch (error) {
         toastError("Verification failed. Try again.");
+        console.log("object", error);
         form.setFields([
           {
             name: "otp",
@@ -191,6 +200,12 @@ const LoginScreen: React.FC = () => {
     }
     return Promise.resolve();
   };
+
+  if (localStorage.getItem("Token")) {
+    const token = localStorage.getItem("Token"); 
+    console.log("Token", token); 
+    // here need to perform navigation based on role
+  }
 
   return (
     <Row style={{ minHeight: "100vh", overflow: "hidden" }}>
@@ -317,9 +332,9 @@ const LoginScreen: React.FC = () => {
                           <Input
                             key={index}
                             ref={(el: any) => (otpRefs.current[index] = el)}
-                            type="tel"  
-                            inputMode="numeric" 
-                            pattern="[0-9]*" 
+                            type="tel"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             maxLength={1}
                             style={{
                               width: "40px",

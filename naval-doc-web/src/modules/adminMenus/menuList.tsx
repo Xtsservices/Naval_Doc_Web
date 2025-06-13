@@ -20,7 +20,11 @@ import {
   ClockCircleOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import { adminDashboardService, menuConfigService, menuService } from "../../auth/apiService";
+import {
+  adminDashboardService,
+  menuConfigService,
+  menuService,
+} from "../../auth/apiService";
 import { Menu, MenuTiming } from "./types";
 import AddMenuModal from "./addMenuModal";
 import EditMenuModal from "./editMenuModal";
@@ -49,12 +53,11 @@ const MenuList: React.FC = () => {
   const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(
     []
   );
-const [menuConfigurationTimings, setMenuConfigurationTimings] = useState<MenuTiming[]>([]);           
+
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isSmallMobile, setIsSmallMobile] = useState<boolean>(false);
   const route = useParams();
-console.log("menuConfigurationTimings",menuConfigurationTimings);
   useEffect(() => {
     const checkScreenSize = () => {
       const width = window.innerWidth;
@@ -69,7 +72,6 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
 
   useEffect(() => {
     fetchMenus();
-    fetchMenuConfigurationTimings()
   }, []);
 
   useEffect(() => {
@@ -83,15 +85,7 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
     }
   }, [menus]);
 
-  const fetchMenuConfigurationTimings = async () => {
-    console.log("first,fetchMenuConfigurationTimings");
-   const configs = await menuConfigService.getAllMenuConfigurations();
-          if (!configs || !configs.data) {
-            return;
-          }
-          
-      setMenuConfigurationTimings(configs?.data || [])
-  }
+
 
   const fetchMenus = async () => {
     try {
@@ -189,15 +183,15 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
     return "48px 24px";
   };
 
-  console.log("first,",menus)
+  console.log("first,", menus);
   return (
-    <div 
-       style={{
-          maxWidth: "100%",
-          marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
-          marginRight: window.innerWidth <= 768 ? "8px" : "25px",
-          padding: window.innerWidth <= 480 ? "0 4px" : "0",
-        }}
+    <div
+      style={{
+        maxWidth: "100%",
+        marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
+        marginRight: window.innerWidth <= 768 ? "8px" : "25px",
+        padding: window.innerWidth <= 480 ? "0 4px" : "0",
+      }}
     >
       {/* Header Section */}
       <div
@@ -219,19 +213,21 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
             }
             title={
               route?.canteenName
-                ? `Menu Management${isMobile ? "" : `  |  ${route.canteenName}`}`
+                ? `Menu Management${
+                    isMobile ? "" : `  |  ${route.canteenName}`
+                  }`
                 : "Menu Management"
             }
           />
           {/* Show canteen name on separate line for mobile */}
           {isMobile && route?.canteenName && (
-            <Text 
-              type="secondary" 
-              style={{ 
+            <Text
+              type="secondary"
+              style={{
                 fontSize: "14px",
                 display: "block",
                 marginTop: "4px",
-                marginLeft: "40px" // Align with back header
+                marginLeft: "40px", // Align with back header
               }}
             >
               {route.canteenName}
@@ -258,10 +254,10 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
       </div>
 
       {/* Menu Grid */}
-      <Row 
+      <Row
         gutter={[
-          isSmallMobile ? 8 : isMobile ? 12 : 24, 
-          isSmallMobile ? 8 : isMobile ? 12 : 24
+          isSmallMobile ? 8 : isMobile ? 12 : 24,
+          isSmallMobile ? 8 : isMobile ? 12 : 24,
         ]}
       >
         {/* Add New Menu Card */}
@@ -298,8 +294,8 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                 marginBottom: "8px",
               }}
             />
-            <Paragraph 
-              style={{ 
+            <Paragraph
+              style={{
                 marginBottom: 0,
                 fontSize: isSmallMobile ? "12px" : "14px",
                 textAlign: "center",
@@ -314,7 +310,7 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
         {menus.map((menu) => (
           <Col xs={24} sm={12} md={8} lg={8} xl={6} key={menu.id}>
             <Card
-              style={{ 
+              style={{
                 height: getCardHeight(),
                 display: "flex",
                 flexDirection: "column",
@@ -340,35 +336,37 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                   />
                 </div>
               }
-              styles={{ 
-                body: { 
+              styles={{
+                body: {
                   padding: isSmallMobile ? "12px" : "16px",
                   flex: 1,
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                } 
+                },
               }}
             >
               <div style={{ flex: 1 }}>
                 {/* Menu Title and Items Count */}
                 <div style={{ textAlign: "center", marginBottom: "12px" }}>
-                  <div style={{ 
-                    display: "flex", 
-                    alignItems: "center", 
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                    gap: "4px",
-                  }}>
-                    <ClockCircleOutlined 
-                      style={{ 
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                      gap: "4px",
+                    }}
+                  >
+                    <ClockCircleOutlined
+                      style={{
                         marginRight: "4px",
                         fontSize: isSmallMobile ? "12px" : "14px",
-                      }} 
+                      }}
                     />
-                    <Text 
-                      type="secondary" 
-                      style={{ 
+                    <Text
+                      type="secondary"
+                      style={{
                         fontWeight: "700",
                         fontSize: isSmallMobile ? "12px" : "14px",
                         textAlign: "center",
@@ -378,9 +376,9 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                       {menu?.name}
                     </Text>
                   </div>
-                  <Tag 
-                    color="blue" 
-                    style={{ 
+                  <Tag
+                    color="blue"
+                    style={{
                       marginTop: "4px",
                       fontSize: isSmallMobile ? "10px" : "12px",
                     }}
@@ -390,51 +388,46 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                 </div>
 
                 {/* Time Display */}
-                {route?.canteenId && (
-                  <div style={{ textAlign: "center", marginBottom: "12px" }}>
-                    <Space
-                      direction="vertical"
-                      size="small"
-                      style={{ width: "100%" }}
-                    >
-                      <div style={{ 
-                        display: "flex", 
-                        alignItems: "center", 
+
+                <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                  <Space
+                    direction="vertical"
+                    size="small"
+                    style={{ width: "100%" }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
                         justifyContent: "center",
                         flexWrap: "wrap",
-                      }}>
-                        <CalendarOutlined 
-                          style={{ 
-                            marginRight: "4px",
-                            fontSize: isSmallMobile ? "12px" : "14px",
-                          }} 
-                        />
-                        <Text 
-                          type="secondary" 
-                          style={{ 
-                            fontWeight: "700",
-                            fontSize: isSmallMobile ? "11px" : "13px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {/* {formatDate(
-                            menu?.defaultStartTime ?? 0
-                          )}
-                          {" - "}
-                          {formatDate(
-                            menu?.defaultEndTime ?? 0
-                          )} */}
-                            {menuConfigurationTimings
-                            ?.filter((eachTime) => eachTime.name === menu?.name)
-                            ?.map((eachTime) => (
-                              `${formatDate(eachTime.defaultStartTime)} - ${formatDate(eachTime.defaultEndTime)}`
-                            ))
-                            ?.join(", ")}
-                        </Text>
-                      </div>
-                    </Space>
-                  </div>
-                )}
+                      }}
+                    >
+                      <CalendarOutlined
+                        style={{
+                          marginRight: "4px",
+                          fontSize: isSmallMobile ? "12px" : "14px",
+                        }}
+                      />
+                      <Text
+                        type="secondary"
+                        style={{
+                          fontWeight: "700",
+                          fontSize: isSmallMobile ? "11px" : "13px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {formatDate(
+                          menu?.menuMenuConfiguration?.defaultStartTime ?? 0
+                        )}
+                        {" - "}
+                        {formatDate(
+                          menu?.menuMenuConfiguration?.defaultEndTime ?? 0
+                        )}
+                      </Text>
+                    </div>
+                  </Space>
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -455,7 +448,7 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                         icon={<EyeOutlined />}
                         type="text"
                         onClick={() => handleViewMenu(menu)}
-                        style={{ 
+                        style={{
                           color: "#1890ff",
                           padding: isSmallMobile ? "4px" : "4px 8px",
                         }}
@@ -467,7 +460,7 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                         icon={<EditOutlined />}
                         type="text"
                         onClick={() => handleEditMenu(menu)}
-                        style={{ 
+                        style={{
                           color: "#52c41a",
                           padding: isSmallMobile ? "4px" : "4px 8px",
                         }}
@@ -480,7 +473,7 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
                         type="text"
                         danger
                         onClick={() => handleDeleteMenu(menu.id)}
-                        style={{ 
+                        style={{
                           padding: isSmallMobile ? "4px" : "4px 8px",
                         }}
                         size={isSmallMobile ? "small" : "middle"}
@@ -524,21 +517,23 @@ console.log("menuConfigurationTimings",menuConfigurationTimings);
 
       {/* Empty State */}
       {menus.length === 0 && !loading && (
-        <div style={{ 
-          padding: isMobile ? "40px 16px" : "60px 0",
-          textAlign: "center",
-        }}>
-          <Empty 
-            description="No menus found" 
-            style={{ 
+        <div
+          style={{
+            padding: isMobile ? "40px 16px" : "60px 0",
+            textAlign: "center",
+          }}
+        >
+          <Empty
+            description="No menus found"
+            style={{
               marginTop: "32px",
             }}
             imageStyle={{
               height: isMobile ? 60 : 100,
             }}
           >
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<PlusOutlined />}
               onClick={handleAddMenu}
               size={isMobile ? "large" : "middle"}

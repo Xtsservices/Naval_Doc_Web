@@ -21,6 +21,7 @@ import {
 } from "@ant-design/icons";
 import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
 import navyLogo from "/public/Naval.jpg";
+import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -32,11 +33,11 @@ interface HeaderProps {
 
 const StyledHeader: React.FC<HeaderProps> = ({
   brandName = "Industrial NDY",
-  navigate,
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isSmallMobile, setIsSmallMobile] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [notifications] = useState([
     {
       id: "1",
@@ -74,15 +75,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
   }, []);
 
   const handleNavigation = (path: string) => {
-    if (navigate) {
-      navigate(path);
-    } else {
-      window.location.href = path;
-    }
+    setDrawerVisible(false);
 
-    if (drawerVisible) {
-      setDrawerVisible(false);
-    }
+    navigate(path);
   };
 
   const handleLogout = () => {
@@ -212,9 +207,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
           }}
         >
           <QuestionCircleOutlined
-            style={{ 
-              fontSize: isMobile ? "20px" : "25px", 
-              color: "ghostwhite" 
+            style={{
+              fontSize: isMobile ? "20px" : "25px",
+              color: "ghostwhite",
             }}
           />
           {!isMobile && <span style={{ fontSize: "14px" }}>Help</span>}
@@ -289,11 +284,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 gap: isSmallMobile ? "4px" : "12px",
               }}
             >
-              <img 
-                src={navyLogo} 
-                style={getLogoStyles()}
-                alt="Navy Logo"
-              />
+              <img src={navyLogo} style={getLogoStyles()} alt="Navy Logo" />
             </div>
           </Col>
 
@@ -302,7 +293,11 @@ const StyledHeader: React.FC<HeaderProps> = ({
             <div
               style={{
                 display: "flex",
-                justifyContent: isSmallMobile ? "flex-start" : isMobile ? "flex-start" : "center",
+                justifyContent: isSmallMobile
+                  ? "flex-start"
+                  : isMobile
+                  ? "flex-start"
+                  : "center",
                 alignItems: "center",
                 height: "100%",
                 marginLeft: isSmallMobile ? "0px" : isMobile ? "5px" : "7rem",
@@ -338,11 +333,10 @@ const StyledHeader: React.FC<HeaderProps> = ({
                   {!isSmallMobile && renderDesktopNavItems()}
                   {/* {renderMobileMenu()} */}
                 </>
-              ) 
-              : (
+              ) : (
                 renderDesktopNavItems()
               )}
-              
+
               <Popover
                 content={profileMenu}
                 trigger="click"
@@ -351,8 +345,8 @@ const StyledHeader: React.FC<HeaderProps> = ({
                 <Avatar
                   size={isSmallMobile ? "default" : "large"}
                   icon={<UserOutlined style={{ color: "#3F51B5" }} />}
-                  style={{ 
-                    background: "white", 
+                  style={{
+                    background: "white",
                     cursor: "pointer",
                     flexShrink: 0,
                   }}
@@ -370,7 +364,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         open={drawerVisible}
         width={isMobile ? Math.min(280, window.innerWidth * 0.8) : 250}
         styles={{
-          body: { padding: "16px 0" }
+          body: { padding: "16px 0" },
         }}
       >
         <Menu mode="vertical" style={{ border: "none" }}>
@@ -386,7 +380,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
           >
             Notifications
           </Menu.Item>
-          
+
           <Menu.SubMenu
             key="help"
             icon={<QuestionCircleOutlined />}
@@ -408,9 +402,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
               WhatsApp Support
             </Menu.Item>
           </Menu.SubMenu>
-          
+
           <Menu.Divider />
-          
+
           <Menu.Item
             key="profile"
             icon={<ProfileOutlined />}
@@ -419,7 +413,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
           >
             Profile
           </Menu.Item>
-          
+
           <Menu.Item
             key="logout"
             icon={<LogoutOutlined />}

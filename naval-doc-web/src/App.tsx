@@ -80,19 +80,16 @@ const App = () => {
               element={<MenuList />}
             />
           </Route>
+
+          <Route path="/user/select-canteen" element={<UserSelectCanteen />} />
+          <Route path="/user/select-menu" element={<SelectMenu />} />
+          <Route path="/user/selected-menu/:id" element={<MenuByItems />} />
+          {/* <Route path="/user/myCart" element={<Cart />} /> */}
+          <Route path="/user/myCart" element={<MyCart />} />
+          <Route path="/user/paymentMethod" element={<PaymentMethod />} />
+          <Route path="/user/orders" element={<MyOrders />} />
+          <Route path="/user/wallet" element={<Wallet />} />
         </Route>
-
-        <Route path="/user/select-canteen" element={<UserSelectCanteen />} />
-        <Route path="/user/select-menu" element={<SelectMenu />} />
-        <Route path="/user/selected-menu/:id" element={<MenuByItems />} />
-        {/* <Route path="/user/myCart" element={<Cart />} /> */}
-        <Route path="/user/myCart" element={<MyCart />} />
-        <Route path="/user/paymentMethod" element={<PaymentMethod />} />
-        <Route path="/user/orders" element={<MyOrders />} />
-        <Route path="/user/wallet" element={<Wallet />} />
-        
-
-      
 
         {/* Admin Routes */}
 
