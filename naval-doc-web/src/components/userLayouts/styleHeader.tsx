@@ -35,6 +35,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
   navigate,
 }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isSmallMobile, setIsSmallMobile] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const [notifications] = useState([
     {
@@ -59,7 +60,9 @@ const StyledHeader: React.FC<HeaderProps> = ({
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsSmallMobile(width < 480);
     };
 
     checkScreenSize();
@@ -111,6 +114,12 @@ const StyledHeader: React.FC<HeaderProps> = ({
       onClick={() => setDrawerVisible(true)}
       style={{
         color: "white",
+        fontSize: "18px",
+        padding: "4px 8px",
+        height: "auto",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     />
   );
@@ -121,7 +130,7 @@ const StyledHeader: React.FC<HeaderProps> = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
-        gap: "24px",
+        gap: isMobile ? "16px" : "24px",
       }}
     >
       <Popover
@@ -141,12 +150,26 @@ const StyledHeader: React.FC<HeaderProps> = ({
             color: "white",
             cursor: "pointer",
             gap: "5px",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            transition: "background-color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
           }}
         >
           <Badge count={unreadCount}>
-            <BellFilled style={{ fontSize: "25px", color: "ghostwhite" }} />
+            <BellFilled 
+              style={{ 
+                fontSize: isMobile ? "20px" : "25px", 
+                color: "ghostwhite" 
+              }} 
+            />
           </Badge>
-          <span>Notification</span>
+          {!isMobile && <span style={{ fontSize: "14px" }}>Notification</span>}
         </div>
       </Popover>
 
@@ -177,16 +200,69 @@ const StyledHeader: React.FC<HeaderProps> = ({
             color: "white",
             cursor: "pointer",
             gap: "5px",
+            padding: "4px 8px",
+            borderRadius: "4px",
+            transition: "background-color 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
           }}
         >
           <QuestionCircleOutlined
-            style={{ fontSize: "25px", color: "ghostwhite" }}
+            style={{ 
+              fontSize: isMobile ? "20px" : "25px", 
+              color: "ghostwhite" 
+            }}
           />
-          <span>Help</span>
+          {!isMobile && <span style={{ fontSize: "14px" }}>Help</span>}
         </div>
       </Popover>
     </div>
   );
+
+  const getLogoStyles = () => {
+    if (isSmallMobile) {
+      return { height: "50px", width: "80px", marginTop: "0px" };
+    } else if (isMobile) {
+      return { height: "60px", width: "100px", marginTop: "0px" };
+    } else {
+      return { height: "90px", width: "150px", marginTop: "-5px" };
+    }
+  };
+
+  const getBrandNameStyles = () => {
+    if (isSmallMobile) {
+      return {
+        fontSize: "14px",
+        marginLeft: "8px",
+        whiteSpace: "nowrap" as const,
+        overflow: "hidden" as const,
+        textOverflow: "ellipsis" as const,
+        maxWidth: "120px",
+      };
+    } else if (isMobile) {
+      return {
+        fontSize: "18px",
+        marginLeft: "16px",
+        whiteSpace: "nowrap" as const,
+      };
+    } else {
+      return {
+        fontSize: "30px",
+        marginLeft: "40px",
+        whiteSpace: "nowrap" as const,
+      };
+    }
+  };
+
+  const getHeaderHeight = () => {
+    if (isSmallMobile) return "70px";
+    if (isMobile) return "80px";
+    return "100px";
+  };
 
   return (
     <>
@@ -194,8 +270,8 @@ const StyledHeader: React.FC<HeaderProps> = ({
         className="site-header"
         style={{
           backgroundColor: "rgb(1, 0, 128)",
-          padding: "0 18px",
-          height: "100px",
+          padding: isSmallMobile ? "0 8px" : isMobile ? "0 12px" : "0 18px",
+          height: getHeaderHeight(),
           position: "sticky",
           top: 0,
           zIndex: 999,
@@ -204,61 +280,82 @@ const StyledHeader: React.FC<HeaderProps> = ({
         }}
       >
         <Row align="middle" style={{ height: "100%" }}>
-          <Col xs={6} sm={6} md={5} lg={4}>
+          {/* Logo Section */}
+          <Col xs={8} sm={6} md={5} lg={4}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "12px",
+                gap: isSmallMobile ? "4px" : "12px",
               }}
             >
-              <img src={navyLogo} style={{ height: "90px", width: "150px" , marginTop: "-5px" }} />
+              <img 
+                src={navyLogo} 
+                style={getLogoStyles()}
+                alt="Navy Logo"
+              />
             </div>
           </Col>
 
-          <Col xs={12} sm={12} md={12} lg={12}>
+          {/* Brand Name Section */}
+          <Col xs={8} sm={12} md={12} lg={12}>
             <div
               style={{
                 display: "flex",
-                justifyContent: isMobile ? "flex-start" : "center",
+                justifyContent: isSmallMobile ? "flex-start" : isMobile ? "flex-start" : "center",
                 alignItems: "center",
                 height: "100%",
-                marginLeft: isMobile ? "5px" : "7rem",
+                marginLeft: isSmallMobile ? "0px" : isMobile ? "5px" : "7rem",
               }}
             >
               <Text
                 style={{
                   color: "white",
-                  fontSize: isMobile ? "20px" : "30px",
-                  marginLeft:"40px",
                   fontWeight: "bold",
-                  whiteSpace: "nowrap",
+                  ...getBrandNameStyles(),
                 }}
+                title={brandName} // Show full text on hover for truncated text
               >
                 {brandName}
               </Text>
             </div>
           </Col>
 
-          <Col xs={6} sm={6} md={7} lg={8}>
+          {/* Navigation Section */}
+          <Col xs={8} sm={6} md={7} lg={8}>
             <div
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",
-                gap: "20px",
+                gap: isSmallMobile ? "8px" : "12px",
               }}
             >
-              {isMobile ? renderMobileMenu() : renderDesktopNavItems()}
+              {/* Show desktop nav items on tablet and above, mobile menu on mobile */}
+              {isMobile ? (
+                <>
+                  {/* Show notification icon on mobile tablets but not on small mobile */}
+                  {!isSmallMobile && renderDesktopNavItems()}
+                  {/* {renderMobileMenu()} */}
+                </>
+              ) 
+              : (
+                renderDesktopNavItems()
+              )}
+              
               <Popover
                 content={profileMenu}
                 trigger="click"
                 placement="bottomRight"
               >
                 <Avatar
-                  size="large"
+                  size={isSmallMobile ? "default" : "large"}
                   icon={<UserOutlined style={{ color: "#3F51B5" }} />}
-                  style={{ background: "white", cursor: "pointer" }}
+                  style={{ 
+                    background: "white", 
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
                 />
               </Popover>
             </div>
@@ -271,7 +368,10 @@ const StyledHeader: React.FC<HeaderProps> = ({
         placement="right"
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
-        width={250}
+        width={isMobile ? Math.min(280, window.innerWidth * 0.8) : 250}
+        styles={{
+          body: { padding: "16px 0" }
+        }}
       >
         <Menu mode="vertical" style={{ border: "none" }}>
           <Menu.Item
@@ -282,39 +382,49 @@ const StyledHeader: React.FC<HeaderProps> = ({
               </Badge>
             }
             onClick={() => handleNavigation("/notifications")}
+            style={{ fontSize: "16px", padding: "12px 16px" }}
           >
-            Notification
+            Notifications
           </Menu.Item>
+          
           <Menu.SubMenu
             key="help"
             icon={<QuestionCircleOutlined />}
-            title="Help"
+            title="Help & Support"
+            style={{ fontSize: "16px" }}
           >
             <Menu.Item
               key="help-support"
-              onClick={() => handleNavigation("/support")}
+              onClick={() => handleNavigation("/contact-support")}
+              style={{ padding: "8px 16px" }}
             >
               Contact Support
             </Menu.Item>
             <Menu.Item
               key="help-terms"
               onClick={() => handleNavigation("/terms")}
+              style={{ padding: "8px 16px" }}
             >
               WhatsApp Support
             </Menu.Item>
           </Menu.SubMenu>
+          
           <Menu.Divider />
+          
           <Menu.Item
             key="profile"
             icon={<ProfileOutlined />}
             onClick={() => handleNavigation("/profile")}
+            style={{ fontSize: "16px", padding: "12px 16px" }}
           >
             Profile
           </Menu.Item>
+          
           <Menu.Item
             key="logout"
             icon={<LogoutOutlined />}
             onClick={handleLogout}
+            style={{ fontSize: "16px", padding: "12px 16px", color: "#ff4d4f" }}
           >
             Logout
           </Menu.Item>

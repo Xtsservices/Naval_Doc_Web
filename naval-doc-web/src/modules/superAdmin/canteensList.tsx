@@ -76,11 +76,10 @@ const CanteenList: React.FC = () => {
     }
   };
 
-  const handleCanteenClick = (canteenId: number, canteenName:string) => {
+  const handleCanteenClick = (canteenId: number, canteenName: string) => {
     console.log(`Navigating to canteen with ID: ${canteenId}`);
     console.log(canteenId, "canteeId", canteenName, "canteenName");
     navigate(`/canteens-list/canteen-dashboard/${canteenId}/${canteenName}`);
-    // /canteens-list/canteen-dashboard/:canteenId/:canteenName/menu
   };
 
   const handleAddCanteen = () => {
@@ -102,7 +101,8 @@ const CanteenList: React.FC = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "60px 0",
+        padding: "40px 16px",
+        textAlign: "center",
       }}
     >
       <Empty
@@ -115,6 +115,11 @@ const CanteenList: React.FC = () => {
         icon={<PlusOutlined />}
         onClick={handleAddCanteen}
         size="large"
+        style={{
+          width: "100%",
+          maxWidth: "280px",
+          height: "48px",
+        }}
       >
         Add Your First Canteen
       </Button>
@@ -126,24 +131,34 @@ const CanteenList: React.FC = () => {
       <Content
         style={{
           maxWidth: "100%",
-          marginLeft: "25px",
-          marginRight: "25px",
+          marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
+          marginRight: window.innerWidth <= 768 ? "8px" : "25px",
+          padding: window.innerWidth <= 480 ? "0 4px" : "0",
         }}
       >
         <BackHeader path="/dashboard" title="Canteens Management" />
-        {countsData?.length !== 0 && <CanteenOrdersDisplay data={countsData}/>}
-        {/* <CanteenOrdersDisplay /> */}
+        {countsData?.length !== 0 && <CanteenOrdersDisplay data={countsData} />}
+        
         {loading ? (
           <Loader />
         ) : canteens.length === 0 ? (
           <EmptyState />
         ) : (
-          <Row gutter={[16, 16]}>
-            <Col xs={12} sm={8} md={6} lg={5}>
+          <Row 
+            gutter={[
+              window.innerWidth <= 480 ? 8 : window.innerWidth <= 768 ? 12 : 16, 
+              window.innerWidth <= 480 ? 8 : window.innerWidth <= 768 ? 12 : 16
+            ]}
+            style={{ 
+              margin: window.innerWidth <= 480 ? "0 -4px" : "0 -8px" 
+            }}
+          >
+            {/* Add New Canteen Card */}
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
               <Card
                 hoverable
                 style={{
-                  height: "100%",
+                  height: window.innerWidth <= 480 ? "200px" : "240px",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -161,55 +176,118 @@ const CanteenList: React.FC = () => {
                     justifyContent: "center",
                     height: "100%",
                     width: "100%",
-                    padding: "30px",
+                    padding: window.innerWidth <= 480 ? "16px" : "24px",
                   },
                 }}
                 onClick={handleAddCanteen}
               >
                 <div style={{ marginBottom: "8px" }}>
                   <PlusOutlined
-                    style={{ fontSize: "32px", color: "#52c41a" }}
+                    style={{ 
+                      fontSize: window.innerWidth <= 480 ? "24px" : "32px", 
+                      color: "#52c41a" 
+                    }}
                   />
                 </div>
-                <Typography.Text strong>Add New Canteen</Typography.Text>
+                <Typography.Text 
+                  strong
+                  style={{
+                    fontSize: window.innerWidth <= 480 ? "12px" : "14px",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Add New Canteen
+                </Typography.Text>
               </Card>
             </Col>
+
+            {/* Canteen Cards */}
             {canteens.map((canteen) => (
-              <Col xs={12} sm={8} md={6} lg={5} key={canteen.id}>
+              <Col xs={24} sm={12} md={8} lg={6} xl={4} key={canteen.id}>
                 <Card
                   hoverable
-                  style={{ height: "100%" }}
-                  cover={
-                    <img
-                      alt={canteen.name}
-                      src={canteen.image}
-                      style={{
-                        height: "150px",
-                        objectFit: "cover",
-                      }}
-                    />
+                  style={{ 
+                    height: window.innerWidth <= 480 ? "280px" : "320px",
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "pointer",
+                  }}
+                  styles={{
+                    body: {
+                      padding: window.innerWidth <= 480 ? "12px" : "16px",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                    },
+                  }}
+                  onClick={() =>
+                    handleCanteenClick(
+                      canteen.id,
+                      canteen?.name?.charAt(0).toUpperCase() +
+                        canteen.name.slice(1)
+                    )
                   }
-                  // onClick={() => handleCanteenClick(canteen.id)}
+                  cover={
+                    <div
+                      style={{
+                        height: window.innerWidth <= 480 ? "120px" : "150px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        alt={canteen.name}
+                        src={canteen.image}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  }
                 >
-                  <Card.Meta
-                    title={
-                      canteen?.name
+                  <div
+                    style={{
+                      textAlign: "center",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography.Title
+                      level={window.innerWidth <= 480 ? 5 : 4}
+                      style={{
+                        marginBottom: window.innerWidth <= 480 ? "8px" : "12px",
+                        fontSize: window.innerWidth <= 480 ? "14px" : "16px",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {canteen?.name
                         ? canteen.name.charAt(0).toUpperCase() +
                           canteen.name.slice(1)
-                        : ""
-                    }
-                    description={
-                      <>
-                        {/* <h5 style={{ marginBottom: 0, marginTop: 0 }}>
-                          Code: {canteen.code}
-                        </h5> */}
-                        <Button onClick={() => handleCanteenClick(canteen.id, canteen?.name?.charAt(0).toUpperCase() + canteen.name.slice(1))}>
-                          Go to Canteen Dashboard
-                        </Button>
-                      </>
-                    }
-                    style={{ textAlign: "center", fontSize: "23px" }}
-                  />
+                        : ""}
+                    </Typography.Title>
+                    
+                    <Button
+                      type="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCanteenClick(
+                          canteen.id,
+                          canteen?.name?.charAt(0).toUpperCase() +
+                            canteen.name.slice(1)
+                        );
+                      }}
+                      style={{
+                        width: "100%",
+                        height: window.innerWidth <= 480 ? "36px" : "40px",
+                        fontSize: window.innerWidth <= 480 ? "12px" : "14px",
+                      }}
+                    >
+                      {window.innerWidth <= 480 ? "Go to Canteen Dashboard" : "Go to Canteen Dashboard"}
+                    </Button>
+                  </div>
                 </Card>
               </Col>
             ))}
