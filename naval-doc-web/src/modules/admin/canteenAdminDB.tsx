@@ -39,7 +39,7 @@ const CanteenAdminDB = () => {
         path="/canteens-list"
         title={
           route?.canteenName
-            ? `Canteen Dashboard  |  ${route.canteenName}`
+            ? `${route.canteenName}`
             : "Canteen Dashboard"
         }
         styles={{

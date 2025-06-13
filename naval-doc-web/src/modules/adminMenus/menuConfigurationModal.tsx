@@ -92,7 +92,7 @@ const MenuConfigurationModal: React.FC<MenuConfigurationModalProps> = ({
     setError(null);
 
     console.log("first", startTime, endTime,name);
-return
+
     try {
       await menuConfigService.createMenuConfiguration({
         name,

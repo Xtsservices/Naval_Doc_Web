@@ -11,6 +11,8 @@ import {
   DatePicker,
 } from "antd";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import { AppState } from "../../store/storeTypes";
 
 const { Text } = Typography;
 
@@ -23,6 +25,11 @@ interface ProfileData {
 }
 
 const ProfileDetails: React.FC = () => {
+
+
+  const user = useSelector((state: AppState) => state.currentUserData);
+  console.log("user", user);
+
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({

@@ -40,8 +40,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     console.log("first",100)
     try {
       const values = await form.validateFields();
-      console.log("firstName", values);
-      return
       setLoading(true);
       const formData = new FormData();
       formData.append("canteenName", values.canteenName.trim());

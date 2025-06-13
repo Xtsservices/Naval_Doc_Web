@@ -253,8 +253,9 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               style={formItemStyle}
             >
               <Select placeholder="Select Unit" style={inputStyle}>
-                <Option value="grams">Grams</Option>
-                <Option value="ml">Milliliters</Option>
+                <Option value="grams">grams</Option>
+                <Option value="ml">ml</Option>
+                <Option value="pieces">pieces</Option>
               </Select>
             </Form.Item>
           </Col>
@@ -325,8 +326,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               name="itemImage"
               label="Item Image"
               rules={[
-                { required: true, message: "Please upload item image" },
-                { validator: validateFileUpload },
+                { required: true, message: "Please upload an item image" },
               ]}
             >
               <Upload

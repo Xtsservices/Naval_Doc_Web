@@ -8,6 +8,7 @@ import {
   Menu,
   Drawer,
   Popover,
+   Badge,
 } from "antd";
 import {
   UserOutlined,
@@ -232,7 +233,9 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             </Col>
             <Col onClick={() => handleNavigation("/user/myCart")}>
               <div style={{ textAlign: "center", cursor: "pointer" }}>
+                <Badge count={3}>
                 <ShoppingCartOutlined style={{ fontSize: "22px", color: "white" }} />
+                </Badge>
                 <div style={{ fontSize: "12px", color: "white" }}>Cart</div>
               </div>
             </Col>
