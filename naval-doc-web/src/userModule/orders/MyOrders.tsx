@@ -136,9 +136,9 @@ const MyOrders: React.FC = () => {
   };
 
   return (
-    <div style={{ background: "#F8F9FB", minHeight: "100vh", padding: 16 }}>
+    <div style={{ background: "#F8F9FB", minHeight: "100vh", padding: 0 }}>
       <UserHeader headerText="My Orders" />
-      <Title level={3} style={{ marginTop: 16 }}>
+      <Title level={3} style={{ marginTop: 16 , marginLeft: 16}}>
         Orders History
       </Title>
 
