@@ -325,8 +325,8 @@ const MenuByItems: React.FC = () => {
         <button
           style={{
             position: "fixed",
-            bottom: 20,
-            right: 20,
+            bottom: 65,
+            right: 6,
             backgroundColor: "#071ea0",
             color: "#fff",
             border: "none",

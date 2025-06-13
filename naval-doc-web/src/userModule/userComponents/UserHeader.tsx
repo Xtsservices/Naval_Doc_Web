@@ -59,16 +59,17 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
     <Menu style={{ width: 200 }}>
       {isMobile ? (
         <>
-          <Menu.Item
+          {/* <Menu.Item
             key="profile"
             icon={<UserOutlined />}
             onClick={() => handleNavigation("/profile")}
           >
             Profile
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item
             key="help"
             icon={<QuestionCircleOutlined />}
+            onClick={() => handleNavigation("")}
           >
             Help & Support
           </Menu.Item>
@@ -150,7 +151,7 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             >
               <img
                 src={navyLogo}
-                style={{ height: "90px", width: "150px", marginTop: "-5px" }}
+                style={{ height: "80px", width: "120px", marginTop: "-5px" }}
               />
             </div>
           </Col>

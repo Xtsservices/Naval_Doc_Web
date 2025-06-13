@@ -103,7 +103,7 @@ const MyCart: React.FC = () => {
   const totalAmount = subtotal + gstAndCharges + platformFee;
 
   return (
-    <div style={{ backgroundColor: "#F4F6FB", minHeight: "100vh", paddingBottom: 140 }}>
+    <div style={{ backgroundColor: "#F4F6FB", minHeight: "100vh", paddingBottom: 400 }}>
       {/* Header */}
       <UserHeader headerText="My Cart" />
 
@@ -409,7 +409,7 @@ const MyCart: React.FC = () => {
                   width: "100%",
                   padding: 12,
                   borderRadius: 8,
-                  marginTop: 16,
+                  marginTop: 10,
                   fontWeight: "bold",
                   border: "none",
                   fontSize: 16,

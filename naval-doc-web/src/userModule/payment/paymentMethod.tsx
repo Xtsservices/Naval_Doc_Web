@@ -236,7 +236,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         .payment-container {
           min-height: 100vh;
           background-color: white;
-          padding-top: 50px;
+          // padding-top: 50px;
           font-family: Arial, sans-serif;
           position: relative;
         }
@@ -537,12 +537,12 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
       {/* WebView/Iframe for Online Payment - Full Screen when active */}
       {showWebView && paymentLink ? (
         <div className="webview-container">
-          <div className="webview-header">
+          {/* <div className="webview-header">
             <button className="back-button" onClick={handleBackFromWebView}>
               ← Back
             </button>
             <h2 className="webview-title">Complete Payment</h2>
-          </div>
+          </div> */}
           {loading ? (
             <div className="loading-container">
               <div className="spinner"></div>
