@@ -8,6 +8,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CartData, CartItem } from "../userModuleTypes/cartTypes";
 import UserHeader from "../userComponents/UserHeader";
+import { BASE_URL } from "../../constants/api";
+
 
 const MyCart: React.FC = () => {
   const navigation = useNavigate();
@@ -43,8 +45,7 @@ const MyCart: React.FC = () => {
         cartId: cartData?.id,
       };
       const token = localStorage.getItem("Token");
-      const API_BASE_URL = "https://server.welfarecanteen.in/api";
-      await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
+      await axios.post(`${BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
           authorization: token ?? "",

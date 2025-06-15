@@ -12,7 +12,8 @@ import axios from "axios";
 
 const { Title, Text } = Typography;
 
-const BASE_URL = "https://server.welfarecanteen.in/api";
+import { BASE_URL } from "../../constants/api";
+
 
 interface OrderItem {
   id: number;

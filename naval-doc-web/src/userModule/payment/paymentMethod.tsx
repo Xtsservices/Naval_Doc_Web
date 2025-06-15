@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'; // Add this import
 import UserHeader from '../userComponents/UserHeader';
 
+import { BASE_URL } from "../../constants/api";
+
 // Type definitions
 interface PaymentData {
   paymentlink?: string;
@@ -46,7 +48,7 @@ interface PaymentMethodProps {
 
 type PaymentMethodType = "online" | "cash" | "";
 
-const API_URL = "https://server.welfarecanteen.in/api/order/placeOrder";
+const API_URL = "/order/placeOrder";
 
 const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
   const navigate = useNavigate(); // Add this hook
@@ -76,13 +78,13 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         return;
       }
 
-      const response = await fetch(API_URL, {
+      const response = await fetch(BASE_URL + API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           authorization: token,
         },
-        body: JSON.stringify({ paymentMethod: ["wallet",selectedMethod] }),
+        body: JSON.stringify({ paymentMethod: ["wallet", selectedMethod] }),
       });
 
       const data: ApiResponse = await response.json();
