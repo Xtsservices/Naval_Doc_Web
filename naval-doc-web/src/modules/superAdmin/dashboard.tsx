@@ -41,7 +41,7 @@ const SuperAdminDashboard: React.FC = () => {
     { title: "TOTAL CANTEENS", value: countsData.totalCanteens },
     { title: "TOTAL ITEMS", value: countsData.totalItems },
     { title: "TOTAL ORDERS", value: countsData.totalOrders },
-    { title: "REVENUE", value: countsData.revenue !== null && countsData.revenue !== undefined ? `₹ ${countsData.revenue}` : "₹ 0" },
+    { title: "REVENUE", value: countsData.totalAmount !== null && countsData.totalAmount !== undefined ? `₹ ${countsData.totalAmount}` : "₹ 0" },
   ];
 
   const featureCards = [
