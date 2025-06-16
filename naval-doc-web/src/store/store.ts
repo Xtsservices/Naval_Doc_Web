@@ -1,20 +1,23 @@
 // store.ts
-import { createStore } from 'redux';
-import { Action, AppState } from './storeTypes';
+import { createStore } from "redux";
+import { Action, AppState } from "./storeTypes";
 
 const initialData: AppState = {
   currentUserData: null,
+  myCartItems: 0,
 };
 
 function Reducer(state: AppState = initialData, action: Action): AppState {
   switch (action.type) {
-    case 'currentUserData':
+    case "currentUserData":
       return { ...state, currentUserData: action.payload };
+    case "myCartItems":
+      return { ...state, myCartItems: action.payload };
     default:
       return state;
   }
 }
 
 const store = createStore(Reducer);
-
 export default store;
+export const dispatch = store.dispatch;

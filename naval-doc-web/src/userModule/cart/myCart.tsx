@@ -8,6 +8,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CartData, CartItem } from "../userModuleTypes/cartTypes";
 import UserHeader from "../userComponents/UserHeader";
+import { AppState } from "../../store/storeTypes";
+import { useSelector } from "react-redux";
 
 const MyCart: React.FC = () => {
   const navigation = useNavigate();

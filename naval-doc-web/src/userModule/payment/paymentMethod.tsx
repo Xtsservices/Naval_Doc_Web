@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom'; // Add this import
-import UserHeader from '../userComponents/UserHeader';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom"; // Add this import
+import UserHeader from "../userComponents/UserHeader";
+import { useDispatch } from "react-redux";
+import { fetchCartData } from "../service/cartHelpers";
 
 // Type definitions
 interface PaymentData {
@@ -48,10 +50,11 @@ type PaymentMethodType = "online" | "cash" | "";
 
 const API_URL = "https://server.welfarecanteen.in/api/order/placeOrder";
 
-const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation prop
+const PaymentMethod: React.FC<PaymentMethodProps> = () => {
+  // Remove navigation prop
   const navigate = useNavigate(); // Add this hook
-  
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>('');
+  const dispatch = useDispatch();
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [orderResponse, setOrderResponse] = useState<OrderResponse | null>(
     null
@@ -75,14 +78,15 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         setLoading(false);
         return;
       }
-
+      
+      
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           authorization: token,
         },
-        body: JSON.stringify({ paymentMethod: ["wallet",selectedMethod] }),
+        body: JSON.stringify({ paymentMethod: ["wallet", selectedMethod] }),
       });
 
       const data: ApiResponse = await response.json();
@@ -91,6 +95,9 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
 
       if (response.ok && data.data?.paymentlink) {
         setOrderResponse(data);
+
+        //update redux store with cart items count
+         await fetchCartData();
 
         // Check for payment link with different possible property names
         const possiblePaymentLink =
@@ -219,7 +226,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
 
   // Handle wallet navigation
   const handleWalletClick = (): void => {
-    navigate('/wallet'); // Use navigate instead of navigation
+    navigate("/wallet"); // Use navigate instead of navigation
   };
 
   console.log("Current state:", {
@@ -532,7 +539,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = () => { // Remove navigation
         }
       `}</style>
 
-      <UserHeader headerText={"Payment Method"}/>
+      <UserHeader headerText={"Payment Method"} />
 
       {/* WebView/Iframe for Online Payment - Full Screen when active */}
       {showWebView && paymentLink ? (

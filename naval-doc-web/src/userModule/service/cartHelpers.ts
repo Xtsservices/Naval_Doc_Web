@@ -1,9 +1,10 @@
 
 import axios from 'axios';
+import { use } from 'react';
+import { dispatch } from '../../store/store';
 
 // Base API URL
 const API_BASE_URL = 'https://server.welfarecanteen.in/api';
-
 // Get authorization token
 export const getAuthToken = async () => {
   try {
@@ -32,6 +33,13 @@ export const fetchCartData = async () => {
     console.log(response?.data, 'response data cart');
 
     if (response.data && response.data.data) {
+      const cartItemsCount = response?.data?.data?.cartItems? response.data.data.cartItems.length : 0
+      dispatch({
+      type: "myCartItems",
+      payload: cartItemsCount,
+    });
+
+    
       return response.data.data;
     } else {
       throw new Error('No cart data found');

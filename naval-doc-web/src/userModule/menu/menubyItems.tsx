@@ -10,6 +10,7 @@ import {
 } from "../service/cartHelpers";
 import UserHeader from "../userComponents/UserHeader";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 interface Pricing {
   id: number;
@@ -52,13 +53,13 @@ const MenuByItems: React.FC = () => {
   const { id } = useParams();
   const menuId = id;
   const token = localStorage.getItem("Token") || "";
-
+ 
   // Increment quantity
   const increaseQuantity = async (item: MenuItem) => {
     setCartUpdated(true);
     try {
       setUpdateLoading(String(item.id));
-      console.log(item, "itemm---------increasingg");
+      // console.log(item, "itemm---------increasingg");
       const cartItemId22 = cartData?.cartItems.find(
         (cartItem) => cartItem.itemId === item.item.id
       )?.item?.id;
@@ -107,6 +108,7 @@ const MenuByItems: React.FC = () => {
 
       // Refresh cart data
       const updatedCartData = await fetchCartData();
+
       setCartData(updatedCartData);
 
       // Update cart items state

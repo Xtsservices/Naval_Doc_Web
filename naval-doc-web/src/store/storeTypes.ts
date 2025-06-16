@@ -15,6 +15,7 @@ export interface UserData {
 // App state structure
 export interface AppState {
   currentUserData: UserData | null;
+  myCartItems: number;
 }
 
 // Action type

@@ -8,7 +8,7 @@ import {
   Menu,
   Drawer,
   Popover,
-   Badge,
+  Badge,
 } from "antd";
 import {
   UserOutlined,
@@ -21,6 +21,9 @@ import {
 } from "@ant-design/icons";
 import navyLogo from "/public/Naval.jpg";
 import { useNavigate } from "react-router-dom";
+import { fetchCartData } from "../service/cartHelpers";
+import { useSelector } from "react-redux";
+import { AppState } from "../../store/storeTypes";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -33,6 +36,7 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
   const navigate = useNavigate();
+  const myCartItems = useSelector((state: AppState) => state.myCartItems);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -40,9 +44,14 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
     };
 
     checkScreenSize();
+    GetCartDate();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  const GetCartDate = async () => {
+     await fetchCartData();
+  };
 
   const handleNavigation = (path: string) => {
     if (navigate) navigate(path);
@@ -96,6 +105,11 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             icon={<ShoppingCartOutlined />}
             onClick={() => handleNavigation("/user/myCart")}
           >
+            <Badge count={myCartItems}>
+                  <ShoppingCartOutlined
+                    style={{ fontSize: "22px", color: "white" }}
+                  />
+                </Badge>
             Cart
           </Menu.Item>
           <Menu.Item
@@ -218,7 +232,11 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             zIndex: 999,
           }}
         >
-          <Row justify="space-around" align="middle" style={{ padding: "8px 0" }}>
+          <Row
+            justify="space-around"
+            align="middle"
+            style={{ padding: "8px 0" }}
+          >
             <Col onClick={() => handleNavigation("/user/select-canteen")}>
               <div style={{ textAlign: "center", cursor: "pointer" }}>
                 <HomeOutlined style={{ fontSize: "22px", color: "white" }} />
@@ -227,16 +245,20 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             </Col>
             <Col onClick={() => handleNavigation("/user/orders")}>
               <div style={{ textAlign: "center", cursor: "pointer" }}>
-                <UnorderedListOutlined style={{ fontSize: "22px", color: "white" }} />
+                <UnorderedListOutlined
+                  style={{ fontSize: "22px", color: "white" }}
+                />
                 <div style={{ fontSize: "12px", color: "white" }}>Orders</div>
               </div>
             </Col>
             <Col onClick={() => handleNavigation("/user/myCart")}>
               <div style={{ textAlign: "center", cursor: "pointer" }}>
-                <Badge count={3}>
-                <ShoppingCartOutlined style={{ fontSize: "22px", color: "white" }} />
+                <Badge count={myCartItems}>
+                  <ShoppingCartOutlined
+                    style={{ fontSize: "22px", color: "white" }}
+                  />
                 </Badge>
-                <div style={{ fontSize: "12px", color: "white" }}>Cart</div>
+                <div style={{ fontSize: "12px", color: "white", }}>Cart</div>
               </div>
             </Col>
             <Col onClick={() => handleNavigation("/user/wallet")}>
