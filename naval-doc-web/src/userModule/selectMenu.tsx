@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import UserHeader from "./userComponents/UserHeader";
+import { BASE_URL } from "../constants/api";
+
 
 // Sample icons as SVGs (replace with your own or use a library)
 const WalletIcon = () => (
@@ -87,7 +89,7 @@ const navigate = useNavigate();
       console.log("Canteen ID:", canteenId);
       try {
         const res = await axios.get(
-          `https://server.welfarecanteen.in/api/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
+          `${BASE_URL}/menu/getMenusForNextTwoDaysGroupedByDateAndConfiguration?canteenId=${canteenId}`,
           {
             headers: {
               Authorization: token,

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import { BASE_URL } from "../../constants/api";
+
+
 type Payment = {
   createdAt: number;
   updatedAt: number;
@@ -44,23 +47,23 @@ const PaymentResponse = () => {
     }
     console.log("/user/orders======start======", 10);
     fetch(
-      "https://server.welfarecanteen.in/api/order/CashfreePaymentLinkDetails",
+      `${BASE_URL}/order/CashfreePaymentLinkDetails`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ linkId }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ linkId }),
       }
     )
       .then(async (res) => {
-        if (!res.ok) throw new Error("Failed to fetch payment details");
-        const data = await res.json();
-        setPayment(data.data?.payment);
-        setOrderDetails(data.data?.orderdetails);
-        // setInterval(() => {
-        //   navigate("/user/orders")
-        // }, 2000);
+      if (!res.ok) throw new Error("Failed to fetch payment details");
+      const data = await res.json();
+      setPayment(data.data?.payment);
+      setOrderDetails(data.data?.orderdetails);
+      // setInterval(() => {
+      //   navigate("/user/orders")
+      // }, 2000);
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
