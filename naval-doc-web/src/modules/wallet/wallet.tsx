@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import UserHeader from '../../userModule/userComponents/UserHeader';
-
+import { BASE_URL } from "../../constants/api";
 // Type definitions
 interface Transaction {
   type: string;
@@ -31,7 +31,7 @@ interface WalletTransactionsResponse {
   message?: string;
 }
 
-const API_BASE_URL = 'https://server.welfarecanteen.in/api/order';
+const API_BASE_URL = `${BASE_URL}/order`;
 
 const Wallet = () => {
   const [walletAmount, setWalletAmount] = useState<number>(0);

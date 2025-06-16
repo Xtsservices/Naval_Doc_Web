@@ -1,8 +1,10 @@
 // apiService.ts
 import axios from "axios";
 
+import { BASE_URL } from "../constants/api";
+// ...existing code...
+
 // Base URL for API requests
-const BASE_URL = "https://server.welfarecanteen.in/api";
 
 // Get token from localStorage or wherever you store it
 const getToken = () => {

@@ -3,6 +3,8 @@ import { Card, Row, Col, Typography, Spin, message, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserHeader from "./userComponents/UserHeader";
+import { BASE_URL } from "../constants/api";
+
 
 const { Title, Text } = Typography;
 
@@ -13,7 +15,7 @@ interface Canteen {
   canteenImage: string;
 }
 
-const API_URL = "https://server.welfarecanteen.in/api/user/getAllCanteens";
+const API_URL = "/user/getAllCanteens";
 
 const UserSelectCanteen: React.FC = () => {
   const [canteens, setCanteens] = useState<Canteen[]>([]);
@@ -29,7 +31,7 @@ const UserSelectCanteen: React.FC = () => {
           message.error("No token found. Please login.");
           return;
         }
-        const res = await axios.get(API_URL, {
+        const res = await axios.get(`${BASE_URL}${API_URL}`, {
           headers: { Authorization: token },
         });
         setCanteens(res.data.data || []);

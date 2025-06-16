@@ -1,12 +1,15 @@
 import { Col, Row, Form, Input, Button, message } from "antd";
 import axios from "axios";
-import React, { useState, useRef, use } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import WorldtekLogo from "../components/common/worldTekLogo";
 import { languageTexts } from "../utils/data";
-import { toastError, toastSuccess } from "../components/common/toasterMessage";
+import { toastError } from "../components/common/toasterMessage";
 import "/public/Naval1.png";
 import { useDispatch } from "react-redux";
+
+import { BASE_URL } from "../constants/api";
+
 
 const LoginScreen: React.FC = () => {
   const [form] = Form.useForm();
@@ -19,8 +22,8 @@ const LoginScreen: React.FC = () => {
   // Create refs for each OTP input field
   const otpRefs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null));
 
-  const API_URL_SEND = "https://server.welfarecanteen.in/api/login";
-  const API_URL_VERIFY = "https://server.welfarecanteen.in/api/verifyOtp";
+  const API_URL_SEND = "/login";
+  const API_URL_VERIFY = "/verifyOtp";
 
   const mobileValue = Form.useWatch("mobile", form); // ✅ Watching mobile field
 
@@ -37,7 +40,7 @@ const LoginScreen: React.FC = () => {
       setOtpButtonDisabled(true);
 
       try {
-        const response = await axios.post(API_URL_SEND, {
+        const response = await axios.post(`${BASE_URL}${API_URL_SEND}`, {
           mobile: mobileValue,
         });
 
@@ -120,7 +123,7 @@ const LoginScreen: React.FC = () => {
       setLoading(true);
 
       try {
-        const response = await axios.post(API_URL_VERIFY, {
+        const response = await axios.post(`${BASE_URL}${API_URL_VERIFY}`, {
           mobile: form.getFieldValue("mobile"),
           otp: form.getFieldValue("otp"),
         });

@@ -4,7 +4,8 @@ import { use } from 'react';
 import { dispatch } from '../../store/store';
 
 // Base API URL
-const API_BASE_URL = 'https://server.welfarecanteen.in/api';
+import { BASE_URL } from "../../constants/api";
+
 // Get authorization token
 export const getAuthToken = async () => {
   try {
@@ -24,7 +25,7 @@ export const fetchCartData = async () => {
   try {
     const token = await getAuthToken();
 
-    const response = await axios.get(`${API_BASE_URL}/cart/getCart`, {
+    const response = await axios.get(`${BASE_URL}/cart/getCart`, {
       headers: {
         'Content-Type': 'application/json',
         authorization: token,
@@ -84,7 +85,7 @@ export const addItemToCart = async (
     console.log('Add item payload:', payload);
     console.log('Token:', token);
 
-    const response = await axios.post(`${API_BASE_URL}/cart/add`, payload, {
+    const response = await axios.post(`${BASE_URL}/cart/add`, payload, {
       headers: {
         'Content-Type': 'application/json',
         authorization: token,
@@ -125,7 +126,7 @@ export const updateCartItemQuantity = async (
     console.log('Update payload:', payload);
 
     const response = await axios.post(
-      `${API_BASE_URL}/cart/updateCartItem`,
+      `${BASE_URL}/cart/updateCartItem`,
       payload,
       {
         headers: {
@@ -158,7 +159,7 @@ export const removeCartItem = async (
     };
 
     const response = await axios.post(
-      `${API_BASE_URL}/cart/removeCartItem`,
+      `${BASE_URL}/cart/removeCartItem`,
       payload,
       {
         headers: {
@@ -180,7 +181,7 @@ export const clearCart = async () => {
   try {
     const token = await getAuthToken();
 
-    const response = await axios.get(`${API_BASE_URL}/cart/clearCart`, {
+    const response = await axios.get(`${BASE_URL}/cart/clearCart`, {
       headers: {
         'Content-Type': 'application/json',
         authorization: token,
@@ -216,7 +217,7 @@ export const fetchDashboardData = async () => {
   try {
     const token = await getAuthToken();
     const response = await fetch(
-      'https://server.welfarecanteen.in/api/adminDasboard/dashboard',
+      `${BASE_URL}/adminDasboard/dashboard`,
       {
         headers: {
           Authorization: token || '',
@@ -234,7 +235,7 @@ export const fetchRecentOrders = async () => {
   try {
     const token = await getAuthToken();
     const response = await fetch(
-      'https://server.welfarecanteen.in/api/adminDasboard/getTotalOrders',
+      `${BASE_URL}/adminDasboard/getTotalOrders`,
       {
         headers: {
           Authorization: token || '',

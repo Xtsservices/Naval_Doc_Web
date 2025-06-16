@@ -12,6 +12,9 @@ import UserHeader from "../userComponents/UserHeader";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
+import { BASE_URL } from "../../constants/api";
+
+
 interface Pricing {
   id: number;
   price: number;
@@ -142,8 +145,7 @@ const MenuByItems: React.FC = () => {
 
       console.log("Request body:", body);
       const token = localStorage.getItem("Token");
-      const API_BASE_URL = "https://server.welfarecanteen.in/api";
-      await axios.post(`${API_BASE_URL}/cart/updateCartItem`, body, {
+      await axios.post(`${BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
           authorization: token,
@@ -172,10 +174,10 @@ const MenuByItems: React.FC = () => {
   const fetchMenuItems = async () => {
     try {
       const res = await fetch(
-        `https://server.welfarecanteen.in/api/menu/getMenuById?id=${menuId}`,
+        `${BASE_URL}/menu/getMenuById?id=${menuId}`,
         {
           headers: {
-            Authorization: token,
+        Authorization: token,
           },
         }
       );
