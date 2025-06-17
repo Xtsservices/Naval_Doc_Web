@@ -1,114 +1,100 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import UserHeader from '../../userModule/userComponents/UserHeader';
+import { useLocation } from 'react-router-dom';
 
-const Contact: React.FC = () => {
-  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+const CallCenter: React.FC = () => {
+  const location = useLocation();
   const containerStyle: React.CSSProperties = {
-    minHeight: '100%',
+    fontFamily: 'Arial, sans-serif',
+    backgroundColor: '#f5f5f5',
+    margin: 0,
+    padding: '0',
+    // minHeight: '100vh',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: isMobile ? '20px' : '0px',
   };
 
-  const wrapperStyle: React.CSSProperties = {
-    maxWidth: '1100px',
-    width: '100%',
-    display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
-    gap: '3rem',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  // const headerStyle: React.CSSProperties = {
+  //   width: '100%',
+  //   backgroundColor: '#0033a0',
+  //   color: 'white',
+  //   padding: '16px',
+  //   textAlign: 'center',
+  //   fontSize: '20px',
+  //   fontWeight: 600,
+  // };
+
+  const cardStyle: React.CSSProperties = {
+    backgroundColor: '#ffffff',
+    border: '2px solid #0033a0',
+    borderRadius: '16px',
+    padding: '24px',
+    maxWidth: '90%',
+    width: '500px',
+    marginTop: '24px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
   };
 
-  const leftStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '600px',
-    textAlign: isMobile ? 'center' : 'left',
-  };
-
-  const headingSmallStyle: React.CSSProperties = {
-    fontSize: '25px',
-    fontWeight: 500,
-    marginBottom: '3rem',
-  };
-
-  const headingLargeStyle: React.CSSProperties = {
-    fontSize: '3.25rem',
+  const cardTitleStyle: React.CSSProperties = {
+    textAlign: 'center',
+    fontSize: '20px',
+    color: '#0033a0',
     fontWeight: 'bold',
-    marginBottom: '1rem',
+    marginBottom: '24px',
   };
 
-  const paragraphStyle: React.CSSProperties = {
-    marginBottom: '1.5rem',
-    fontSize: '20px',
+  const optionBoxStyle = (bgColor: string): React.CSSProperties => ({
+    backgroundColor: bgColor,
+    borderRadius: '12px',
+    padding: '16px',
+    marginBottom: '16px',
+    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
+  });
+
+  const optionTitleStyle: React.CSSProperties = {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#0033a0',
+    marginBottom: '4px',
   };
 
-  const infoStyle: React.CSSProperties = {
-    fontSize: '20px',
-    lineHeight: '1.8',
-  };
-
-  const rightStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: isMobile ? '100%' : '500px',
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: isMobile ? '2rem' : '0',
-  };
-
-  const imageStyle: React.CSSProperties = {
-    width: '100%',
-    maxWidth: '300px',
-    marginLeft: isMobile ? '0' : '5rem',
-    objectFit: 'contain',
+  const optionSubtitleStyle: React.CSSProperties = {
+    fontSize: '14px',
+    color: '#333',
+    margin: 0,
   };
 
   return (
     <div style={containerStyle}>
-      <div style={wrapperStyle}>
-        {/* Left Section */}
-        <div style={leftStyle}>
-          <p style={headingSmallStyle}>How can we help you?</p>
-          <h1 style={headingLargeStyle}>Contact us</h1>
-          <p style={paragraphStyle}>
-            We’re here to help and answer any questions you might have. We look forward to hearing from you!
-          </p>
-          <div style={infoStyle}>
-            <p>
-              📍 <strong>Address:</strong> India
-            </p>
-            <p>
-              📞 <strong>Phone:</strong> +91 71 99 77 07
-            </p>
-            <p>
-              📧 <strong>Email:</strong>{' '}
-              <a href="mailto:mail@navy.com" style={{ color: '#1e88e5', textDecoration: 'none' }}>
-                mail@navy.com
-              </a>
-            </p>
-          </div>
+      {/* Header
+      <div style={headerStyle}>Call Center</div> */}
+      {location.pathname.includes('/user/contact-support') && (
+        <UserHeader headerText='Call Center' />
+      )}
+
+      {/* Call Options Card */}
+      <div style={cardStyle}>
+        <div style={cardTitleStyle}>Call Options</div>
+
+        <div style={optionBoxStyle('#e6f0ff')}>
+          <div style={optionTitleStyle}>Call Option 1</div>
+          <p style={optionSubtitleStyle}>Customer Support</p>
         </div>
 
-        {/* Right Section */}
-        <div style={rightStyle}>
-          <img
-            src="/public/Naval1.png"
-            alt="Hello Illustration"
-            style={imageStyle}
-          />
+        <div style={optionBoxStyle('#fff2cc')}>
+          <div style={optionTitleStyle}>Call Option 2</div>
+          <p style={optionSubtitleStyle}>Technical Support</p>
+        </div>
+
+        <div style={optionBoxStyle('#e6ffec')}>
+          <div style={optionTitleStyle}>Call Option 3</div>
+          <p style={optionSubtitleStyle}>General Inquiry</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default Contact;
+export default CallCenter;

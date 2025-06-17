@@ -59,7 +59,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDB />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/canteens-list" element={<CanteenList />} />
-            <Route path="contact-support" element={<Contact />} />
+            <Route path="/contact-support" element={<Contact />} />
             <Route
               path="/canteens-list/canteen-dashboard/:canteenId/users-list"
               element={<UsersList />}
@@ -92,6 +92,8 @@ const App = () => {
         </Route>
 
         {/* Admin Routes */}
+        <Route path="/user/contact-support" element={<Contact />} />
+
 
         {/* Add routes for Terms and Privacy */}
         <Route path="/terms" element={<Terms />} />

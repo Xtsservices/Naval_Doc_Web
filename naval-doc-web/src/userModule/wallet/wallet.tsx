@@ -120,7 +120,7 @@ const Wallet = () => {
       setTransactions(formattedTransactions);
     } catch (error) {
       console.error('Error fetching wallet transactions:', error);
-      setError('Failed to fetch wallet transactions.');
+      setError('Failed to fetch wallet transactions...');
     } finally {
       setTransactionsLoading(false);
     }
@@ -297,7 +297,7 @@ const Wallet = () => {
           </button>
         </div> */}
 
-        {/* Error Message */}
+        {/* Error Message
         {error && (
           <div className="error-message">
             {error}
@@ -305,7 +305,7 @@ const Wallet = () => {
               Retry
             </button>
           </div>
-        )}
+        )} */}
 
         {/* Wallet Amount Box */}
         <div className="wallet-amount-box">

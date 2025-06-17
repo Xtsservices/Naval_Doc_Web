@@ -79,7 +79,7 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
           <Menu.Item
             key="help"
             icon={<QuestionCircleOutlined />}
-            onClick={() => handleNavigation("")}
+            onClick={() => handleNavigation("/contact-support")}
           >
             Help & Support
           </Menu.Item>
@@ -105,11 +105,12 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
             icon={<ShoppingCartOutlined />}
             onClick={() => handleNavigation("/user/myCart")}
           >
-            <Badge count={myCartItems}>
+
+            {/* <Badge count={myCartItems}>
                   <ShoppingCartOutlined
                     style={{ fontSize: "22px", color: "white" }}
                   />
-                </Badge>
+                </Badge> */}
             Cart
           </Menu.Item>
           <Menu.Item
@@ -122,7 +123,7 @@ const UserHeader: React.FC<HeaderProps> = ({ headerText }) => {
           <Menu.Item
             key="help"
             icon={<QuestionCircleOutlined />}
-            onClick={() => handleNavigation("/user/help-support")}
+            onClick={() => handleNavigation("/user/contact-support")}
           >
             Help & Support
           </Menu.Item>

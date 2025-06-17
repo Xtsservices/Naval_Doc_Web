@@ -55,7 +55,7 @@ const SuperAdminDashboard: React.FC = () => {
     <div
       style={{
         // height: "calc(100vh - 64px)",
-        height: "75vh",
+        // height: "75vh",
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",

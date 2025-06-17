@@ -101,7 +101,7 @@ const UserSelectCanteen: React.FC = () => {
                   hoverable
                   style={{
                     borderRadius: 20,
-                    boxShadow: "0 4px 16px #e0e0e0",
+                    boxShadow: "0 4px 16pxrgb(224, 224, 224)",
                     textAlign: "center",
                     border: "none",
                     background:
