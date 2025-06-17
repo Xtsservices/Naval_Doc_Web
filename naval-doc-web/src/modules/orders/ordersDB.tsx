@@ -214,7 +214,7 @@ const OrdersDashboard: React.FC = () => {
         ))}
       </Row>
 
-      {/* Action Button */}
+      {/* Action Button
       <Row>
         <Col span={24}>
           <Button
@@ -246,7 +246,7 @@ const OrdersDashboard: React.FC = () => {
             View Item Wise List
           </Button>
         </Col>
-      </Row>
+      </Row> */}
     </div>
   );
 };
