@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Form,
@@ -23,11 +23,27 @@ const { Option } = Select;
 const { Text } = Typography;
 const { TextArea } = Input;
 
+interface ItemProps {
+  id: number;
+  name: string;
+  description: string;
+  type: string;
+  quantity: number;
+  quantityUnit: string;
+  price: number;
+  currency: string;
+  startDate: string;
+  endDate: string;
+  image: string;
+  status: string;
+}
+
 interface AddItemModalProps {
   isOpen: boolean;
   onCancel: () => void;
   onSubmit: (values: any) => void;
   onSuccess: () => void;
+  selectedItem?: ItemProps;
 }
 
 const AddItemModal: React.FC<AddItemModalProps> = ({
@@ -35,11 +51,44 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
   onCancel,
   onSubmit,
   onSuccess,
+  selectedItem,
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
+  const editMode = !!selectedItem;
+
+  useEffect(() => {
+    if (isOpen && selectedItem) {
+      // Pre-fill form with selectedItem data
+      form.setFieldsValue({
+        id: selectedItem.id,
+        name: selectedItem.name,
+        type: selectedItem.type,
+        description: selectedItem.description,
+        quantity: selectedItem.quantity,
+        quantityUnit: selectedItem.quantityUnit,
+        price: selectedItem.price,
+        startDate: dayjs.unix(Number(selectedItem.startDate)),
+        endDate: dayjs.unix(Number(selectedItem.endDate)),
+        itemImage: null, // Image handled separately
+      });
+      // Set fileList for existing image
+      setFileList([
+        {
+          uid: "-1",
+          name: "existing-image.png",
+          status: "done",
+          url: selectedItem.image,
+        },
+      ]);
+    } else if (isOpen) {
+      // Reset form for add mode
+      form.resetFields();
+      setFileList([]);
+    }
+  }, [isOpen, selectedItem, form]);
 
   const handleCancel = () => {
     setErrorDetails(null);
@@ -48,16 +97,37 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
     onCancel();
   };
 
+  // Helper function to log FormData contents for debugging
+  const logFormData = (formData: FormData) => {
+    console.log("FormData contents:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+  };
+
   const handleOk = async () => {
     try {
       setLoading(true);
-      setErrorDetails(null); 
+      setErrorDetails(null);
       const values = await form.validateFields();
 
       const formData = new FormData();
-      formData.append("name", values.name.trim());
+
+      // Add mode: Include name
+      if (!editMode) {
+        formData.append("name", values.name.trim());
+      }
+
+      // Include type for both modes
+      formData.append("type", values.type.trim());
+
+      // Edit mode: Include id
+      if (editMode && values.id) {
+        formData.append("id", values.id.toString());
+      }
+
+      // Common fields for both modes
       formData.append("description", values.description.trim());
-      formData.append("type", values.type);
       formData.append("quantity", values.quantity.toString());
       formData.append("quantityUnit", values.quantityUnit);
       formData.append("price", values.price.toString());
@@ -73,16 +143,27 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
         formData.append("image", fileList[0].originFileObj);
       }
 
-      await itemService.createItem(formData);
-      toastSuccess("Item added successfully!");
+      // Log FormData to debug contents
+      logFormData(formData);
+
+      if (editMode && selectedItem) {
+        await itemService.updateItem(formData);
+        toastSuccess("Item updated successfully!");
+      } else {
+        await itemService.createItem(formData);
+        toastSuccess("Item added successfully!");
+      }
+
       form.resetFields();
       setFileList([]);
       onSubmit(values);
-      onSuccess(); 
-      handleCancel(); 
+      onSuccess();
+      handleCancel();
     } catch (error: any) {
-      toastError("Failed to add item. Please try again.");
-      console.error("Error adding item:", error);
+      const errorMessage = editMode ? "Failed to update item." : "Failed to add item.";
+      toastError(`${errorMessage} Please try again.`);
+      setErrorDetails(error.message || errorMessage);
+      console.error(`${errorMessage}:`, error);
     } finally {
       setLoading(false);
     }
@@ -140,7 +221,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
   return (
     <Modal
       className={`add-item-modal ${loading ? "loader-container" : ""}`}
-      title="Add Menu Item"
+      title={editMode ? "Edit Menu Item" : "Add Menu Item"}
       open={isOpen}
       onCancel={handleCancel}
       width={920}
@@ -156,6 +237,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
         name="add_item_form"
         style={{ background: "white" }}
       >
+        {/* Hidden Form.Item for id */}
+        <Form.Item name="id" hidden>
+          <Input type="hidden" />
+        </Form.Item>
+
         <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
@@ -178,7 +264,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               ]}
               style={formItemStyle}
             >
-              <Input placeholder="Enter Item name" style={inputStyle} />
+              <Input
+                placeholder="Enter Item name"
+                style={inputStyle}
+                disabled={editMode}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
@@ -188,7 +278,11 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               rules={[{ required: true, message: "Please select item type" }]}
               style={formItemStyle}
             >
-              <Select placeholder="Select Type" style={inputStyle}>
+              <Select
+                placeholder="Select Type"
+                style={inputStyle}
+                disabled={editMode}
+              >
                 <Option value="veg">Vegetarian</Option>
                 <Option value="non-veg">Non-Vegetarian</Option>
               </Select>
@@ -326,7 +420,8 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               name="itemImage"
               label="Item Image"
               rules={[
-                { required: true, message: "Please upload an item image" },
+                { required: !editMode, message: "Please upload an item image" },
+                { validator: validateFileUpload },
               ]}
             >
               <Upload
@@ -376,7 +471,7 @@ const AddItemModal: React.FC<AddItemModalProps> = ({
               loading={loading}
               style={{ height: "40px" }}
             >
-              Add Item
+              {editMode ? "Update Item" : "Add Item"}
             </Button>
           </Col>
           <Col

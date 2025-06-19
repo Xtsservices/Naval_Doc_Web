@@ -44,7 +44,7 @@ interface ItemProps {
 }
 
 const getImageSrc = (base64String: string) => {
-  if (base64String.startsWith('data:image')) {
+  if (base64String.startsWith("data:image")) {
     return base64String;
   }
   return `data:image/png;base64,${base64String}`;
@@ -107,10 +107,14 @@ const ItemsList: React.FC = () => {
 
   const handleCancelModal = () => {
     setIsModalOpen(false);
+    setSelectedItem(null);
   };
 
   const handleSubmitItem = (values: any) => {
     console.log("Submitted values:", values);
+    //this is edit modal set false
+    setIsModalOpen(false);
+    setSelectedItem(null);
   };
 
   const handleViewItem = (item: ItemProps) => {
@@ -122,6 +126,7 @@ const ItemsList: React.FC = () => {
   const handleEditItem = (item: ItemProps) => {
     setSelectedItem(item);
     setEditModalVisible(true);
+    setIsModalOpen(true);
   };
 
   const handleDeleteItem = (item: ItemProps) => {
@@ -133,7 +138,7 @@ const ItemsList: React.FC = () => {
     if (!selectedItem) return;
 
     try {
-      // await itemService.deleteItem(selectedItem.id);
+      await itemService.deleteItem(selectedItem.id);
       message.success(`${selectedItem.name} has been deleted successfully`);
       fetchItems();
     } catch (error) {
@@ -196,7 +201,7 @@ const ItemsList: React.FC = () => {
   return (
     <Layout>
       <Content
-         style={{
+        style={{
           maxWidth: "100%",
           marginLeft: window.innerWidth <= 768 ? "8px" : "25px",
           marginRight: window.innerWidth <= 768 ? "8px" : "25px",
@@ -206,7 +211,7 @@ const ItemsList: React.FC = () => {
         <BackHeader path="/dashboard" title="Items Management" />
 
         {loading ? (
-          <Loader/>
+          <Loader />
         ) : items.length === 0 ? (
           <EmptyState />
         ) : (
@@ -227,15 +232,17 @@ const ItemsList: React.FC = () => {
                   backgroundColor: "#fafafa",
                   cursor: "pointer",
                 }}
-                styles={{body:{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  width: "100%",
-                  padding: "20px",
-                }}}
+                styles={{
+                  body: {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "100%",
+                    padding: "20px",
+                  },
+                }}
                 onClick={handleAddItem}
               >
                 <div style={{ marginBottom: "8px" }}>
@@ -248,21 +255,14 @@ const ItemsList: React.FC = () => {
                 </Typography.Text>
               </Card>
             </Col>
-            
+
             {/* Item Cards - Responsive sizing */}
             {items.map((item) => (
-              <Col
-                xs={24}
-                sm={12}
-                md={8}
-                lg={6}
-                xl={4}
-                key={item.id}
-              >
+              <Col xs={24} sm={12} md={8} lg={6} xl={4} key={item.id}>
                 <Card
                   hoverable
                   className="item-card-meta"
-                  style={{ 
+                  style={{
                     height: "100%",
                     minHeight: "280px",
                   }}
@@ -290,8 +290,8 @@ const ItemsList: React.FC = () => {
                           gap: "4px",
                         }}
                       >
-                        <span 
-                          style={{ 
+                        <span
+                          style={{
                             fontSize: "14px",
                             fontWeight: "600",
                             flex: 1,
@@ -335,12 +335,12 @@ const ItemsList: React.FC = () => {
                       </div>
                     }
                     description={
-                      <div 
-                        style={{ 
-                          marginTop: 6, 
-                          marginBottom: 8, 
-                          display: "flex", 
-                          justifyContent: "center", 
+                      <div
+                        style={{
+                          marginTop: 6,
+                          marginBottom: 8,
+                          display: "flex",
+                          justifyContent: "center",
                           alignItems: "center",
                           flexWrap: "wrap",
                           gap: "4px",
@@ -357,45 +357,45 @@ const ItemsList: React.FC = () => {
                     }
                   />
 
-                  <Space 
-                    style={{ 
-                      width: '100%', 
-                      justifyContent: 'center', 
+                  <Space
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
                       marginTop: 12,
-                      borderTop: '1px solid #f0f0f0',
-                      paddingTop: 8
+                      borderTop: "1px solid #f0f0f0",
+                      paddingTop: 8,
                     }}
                   >
                     <Tooltip title="View Details">
-                      <Button 
-                        icon={<EyeOutlined />} 
-                        type="text" 
+                      <Button
+                        icon={<EyeOutlined />}
+                        type="text"
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleViewItem(item);
                         }}
-                        style={{ color: '#1890ff' }}
+                        style={{ color: "#1890ff" }}
                       />
                     </Tooltip>
                     <Tooltip title="Edit">
-                      <Button 
-                        icon={<EditOutlined />} 
-                        type="text" 
+                      <Button
+                        icon={<EditOutlined />}
+                        type="text"
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleEditItem(item);
                         }}
-                        style={{ color: '#52c41a' }}
+                        style={{ color: "#52c41a" }}
                       />
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <Button 
-                        icon={<DeleteOutlined />} 
-                        type="text" 
+                      <Button
+                        icon={<DeleteOutlined />}
+                        type="text"
                         size="small"
-                        danger 
+                        danger
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteItem(item);
@@ -413,15 +413,22 @@ const ItemsList: React.FC = () => {
           isOpen={isModalOpen}
           onCancel={handleCancelModal}
           onSubmit={handleSubmitItem}
-          onSuccess={fetchItems} 
+          onSuccess={fetchItems}
+          selectedItem={selectedItem ?? undefined}
         />
 
         <Modal
           title={`Item Details - ${selectedItem?.name || ""}`}
           visible={viewModalVisible}
-          onCancel={() => setViewModalVisible(false)}
+          onCancel={() => {setViewModalVisible(false);setSelectedItem(null);}}
           footer={[
-            <Button key="close" onClick={() => setViewModalVisible(false)}>
+            <Button
+              key="close"
+              onClick={() => {
+                setViewModalVisible(false);
+                setSelectedItem(null);
+              }}
+            >
               Close
             </Button>,
           ]}
@@ -445,7 +452,10 @@ const ItemsList: React.FC = () => {
 
               <Row gutter={[12, 12]}>
                 <Col span={24}>
-                  <Title level={4} style={{ marginBottom: 8, fontSize: "18px" }}>
+                  <Title
+                    level={4}
+                    style={{ marginBottom: 8, fontSize: "18px" }}
+                  >
                     {selectedItem.name}
                   </Title>
                   <Tag
@@ -507,7 +517,7 @@ const ItemsList: React.FC = () => {
           )}
         </Modal>
 
-        <Modal
+        {/* <Modal
           title={`Edit Item - ${selectedItem?.name || ""}`}
           visible={editModalVisible}
           onCancel={() => setEditModalVisible(false)}
@@ -519,7 +529,7 @@ const ItemsList: React.FC = () => {
           {selectedItem && (
             <p>Edit form would go here, populated with selectedItem data</p>
           )}
-        </Modal>
+        </Modal> */}
 
         <Modal
           title="Confirm Deletion"

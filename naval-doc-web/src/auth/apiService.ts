@@ -4,6 +4,12 @@ import axios from "axios";
 import { BASE_URL } from "../constants/api";
 // ...existing code...
 
+interface MenuConfiguration {
+  id: number;
+  defaultStartTime: string;
+  defaultEndTime: string;
+  status?: string;
+}
 // Base URL for API requests
 
 // Get token from localStorage or wherever you store it
@@ -145,16 +151,17 @@ export const itemService = {
   },
 
   // Update item
-  updateItem: async (itemId: number, itemData: FormData) => {
+  updateItem: async (itemData: FormData) => {
+    console.log("updateItem called with data:", itemData);
     try {
-      const response = await apiClient.put(`/item/${itemId}`, itemData, {
+      const response = await apiClient.post(`/item/updateItem`, itemData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       return response.data;
     } catch (error) {
-      console.error(`Error updating item with ID ${itemId}:`, error);
+      console.error(`Error updating item `, error);
       throw error;
     }
   },
@@ -162,7 +169,7 @@ export const itemService = {
   // Delete item
   deleteItem: async (itemId: number) => {
     try {
-      const response = await apiClient.delete(`/item/${itemId}`);
+      const response = await apiClient.post(`/item/deleteItem`, { itemId });
       return response.data;
     } catch (error) {
       console.error(`Error deleting item with ID ${itemId}:`, error);
@@ -229,7 +236,8 @@ export const menuService = {
   // Update menu
   updateMenu: async (menuId: number, menuData: any) => {
     try {
-      const response = await apiClient.put(`/menu/${menuId}`, menuData);
+      console.log("first=========================",menuId,menuData)
+      const response = await apiClient.post(`/menu/updateMenuWithItems/${menuId}`, menuData);
       return response.data;
     } catch (error) {
       console.error(`Error updating menu with ID ${menuId}:`, error);
@@ -240,8 +248,11 @@ export const menuService = {
   // Delete menu
   deleteMenu: async (menuId: number) => {
     try {
-      const response = await apiClient.delete(`/menu/${menuId}`);
-      return response.data;
+      console.log("menuId",menuId)
+      const response = await apiClient.post(`/menu/deleteMenu`, { menuId } );
+      console.log("response",response)
+      return response.status
+;
     } catch (error) {
       console.error(`Error deleting menu with ID ${menuId}:`, error);
       throw error;
@@ -270,7 +281,28 @@ export const menuConfigService = {
       console.error("Error fetching menu configurations:", error);
       throw error;
     }
-  }
+  },
+
+  // updateMenuConfiguration
+   updateMenuConfiguration: async (menuConfigurationData: MenuConfiguration) => {
+    if (!menuConfigurationData.id) {
+      throw new Error("Menu configuration ID is required for update.");
+    }
+    try {
+      const response = await apiClient.put(
+        `menuconfig/updateMenuConfiguration`,
+        {
+          id: menuConfigurationData.id,
+          defaultStartTime: menuConfigurationData.defaultStartTime,
+          defaultEndTime: menuConfigurationData.defaultEndTime,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating menu configuration:", error);
+      throw error;
+    }
+  },
 };
 
 export const adminDashboardService = {

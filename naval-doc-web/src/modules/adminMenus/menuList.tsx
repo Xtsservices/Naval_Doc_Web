@@ -53,7 +53,9 @@ const MenuList: React.FC = () => {
   const [existingMenuTypes, setExistingMenuTypes] = useState<string[] | any>(
     []
   );
-
+  const isCanteenDashboard =
+    window.location.pathname.includes("canteen-dashboard");
+  console.log("isCanteenDashboard", isCanteenDashboard);
 
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [isSmallMobile, setIsSmallMobile] = useState<boolean>(false);
@@ -84,8 +86,6 @@ const MenuList: React.FC = () => {
       setExistingMenuTypes([]);
     }
   }, [menus]);
-
-
 
   const fetchMenus = async () => {
     try {
@@ -134,7 +134,8 @@ const MenuList: React.FC = () => {
 
   const handleDeleteMenu = async (menuId: number) => {
     try {
-      await menuService.deleteMenu(menuId);
+     const res =  await menuService.deleteMenu(menuId);
+     console.log("Menu deleted successfully:", res);
       fetchMenus();
       message.success("Menu deleted successfully");
     } catch (error) {
@@ -183,7 +184,7 @@ const MenuList: React.FC = () => {
     return "48px 24px";
   };
 
-  console.log("first,", menus);
+  console.log("all menus,", menus);
   return (
     <div
       style={{
@@ -349,6 +350,8 @@ const MenuList: React.FC = () => {
               <div style={{ flex: 1 }}>
                 {/* Menu Title and Items Count */}
                 <div style={{ textAlign: "center", marginBottom: "12px" }}>
+                 
+
                   <div
                     style={{
                       display: "flex",
@@ -428,6 +431,32 @@ const MenuList: React.FC = () => {
                     </div>
                   </Space>
                 </div>
+
+                 {/* canteenName */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                      gap: "4px",
+                    }}
+                  >
+                    
+                    <Text
+                      style={{
+                        fontWeight: "700",
+                        fontSize: isSmallMobile ? "12px" : "14px",
+                        textAlign: "center",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {menu?.canteenMenu?.canteenName
+                        ? menu?.canteenMenu?.canteenName
+                        : "Canteen Name Not Available"}
+                    </Text>
+                  </div>
+
               </div>
 
               {/* Action Buttons */}
@@ -455,30 +484,34 @@ const MenuList: React.FC = () => {
                         size={isSmallMobile ? "small" : "middle"}
                       />
                     </Tooltip>
-                    <Tooltip title="Edit">
-                      <Button
-                        icon={<EditOutlined />}
-                        type="text"
-                        onClick={() => handleEditMenu(menu)}
-                        style={{
-                          color: "#52c41a",
-                          padding: isSmallMobile ? "4px" : "4px 8px",
-                        }}
-                        size={isSmallMobile ? "small" : "middle"}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <Button
-                        icon={<DeleteOutlined />}
-                        type="text"
-                        danger
-                        onClick={() => handleDeleteMenu(menu.id)}
-                        style={{
-                          padding: isSmallMobile ? "4px" : "4px 8px",
-                        }}
-                        size={isSmallMobile ? "small" : "middle"}
-                      />
-                    </Tooltip>
+                    {isCanteenDashboard && (
+                      <>
+                        <Tooltip title="Edit">
+                          <Button
+                            icon={<EditOutlined />}
+                            type="text"
+                            onClick={() => handleEditMenu(menu)}
+                            style={{
+                              color: "#52c41a",
+                              padding: isSmallMobile ? "4px" : "4px 8px",
+                            }}
+                            size={isSmallMobile ? "small" : "middle"}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <Button
+                            icon={<DeleteOutlined />}
+                            type="text"
+                            danger
+                            onClick={() => handleDeleteMenu(menu.id)}
+                            style={{
+                              padding: isSmallMobile ? "4px" : "4px 8px",
+                            }}
+                            size={isSmallMobile ? "small" : "middle"}
+                          />
+                        </Tooltip>
+                      </>
+                    )}
                   </Space>
                 ) : (
                   // Desktop: Original layout
@@ -491,22 +524,26 @@ const MenuList: React.FC = () => {
                         style={{ color: "#1890ff" }}
                       />
                     </Tooltip>
-                    <Tooltip title="Edit">
-                      <Button
-                        icon={<EditOutlined />}
-                        type="text"
-                        onClick={() => handleEditMenu(menu)}
-                        style={{ color: "#52c41a" }}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <Button
-                        icon={<DeleteOutlined />}
-                        type="text"
-                        danger
-                        onClick={() => handleDeleteMenu(menu.id)}
-                      />
-                    </Tooltip>
+                    {isCanteenDashboard && (
+                      <>
+                        <Tooltip title="Edit">
+                          <Button
+                            icon={<EditOutlined />}
+                            type="text"
+                            onClick={() => handleEditMenu(menu)}
+                            style={{ color: "#52c41a" }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <Button
+                            icon={<DeleteOutlined />}
+                            type="text"
+                            danger
+                            onClick={() => handleDeleteMenu(menu.id)}
+                          />
+                        </Tooltip>
+                      </>
+                    )}
                   </Space>
                 )}
               </div>

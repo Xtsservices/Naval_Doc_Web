@@ -176,7 +176,7 @@ const EditMenuModal: React.FC<EditMenuModalProps> = ({
         startDate: startDate || "",
         endDate: endDate || "",
       };
-
+console.log("menuData:==========items", menuData.items);
       setSubmitting(true);
       await menuService.updateMenu(menu.id, menuData);
       message.success("Menu updated successfully");
