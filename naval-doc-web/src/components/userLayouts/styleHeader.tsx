@@ -19,7 +19,7 @@ import {
   LogoutOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
-import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
+// import NotificationsDropdown from "../../modules/notifications/notificationDropdown";
 import navyLogo from "/public/Naval.jpg";
 import { useNavigate } from "react-router-dom";
 
@@ -96,28 +96,20 @@ const StyledHeader: React.FC<HeaderProps> = ({
       >
         Profile
       </Menu.Item>
+
+          <Menu.Item
+            key="help"
+            icon={<QuestionCircleOutlined />}
+            onClick={() => handleNavigation("/contact-support")}
+          >
+            Help & Support
+          </Menu.Item>
       <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
   );
 
-  const renderMobileMenu = () => (
-    <Button
-      type="text"
-      icon={<MenuOutlined />}
-      onClick={() => setDrawerVisible(true)}
-      style={{
-        color: "white",
-        fontSize: "18px",
-        padding: "4px 8px",
-        height: "auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    />
-  );
 
   const renderDesktopNavItems = () => (
     <div
@@ -171,12 +163,12 @@ const StyledHeader: React.FC<HeaderProps> = ({
       <Popover
         content={
           <Menu style={{ width: 200 }}>
-            <Menu.Item
+            {/* <Menu.Item
               key="help"
               onClick={() => handleNavigation("/contact-support")}
             >
               Help & Support
-            </Menu.Item>
+            </Menu.Item> */}
             {/* <Menu.Item
               key="help-terms"
               onClick={() => handleNavigation("/terms")}
@@ -206,13 +198,13 @@ const StyledHeader: React.FC<HeaderProps> = ({
             e.currentTarget.style.backgroundColor = "transparent";
           }}
         >
-          <QuestionCircleOutlined
+          {/* <QuestionCircleOutlined
             style={{
               fontSize: isMobile ? "20px" : "25px",
               color: "ghostwhite",
             }}
           />
-          {!isMobile && <span style={{ fontSize: "14px" }}>Help</span>}
+          {!isMobile && <span style={{ fontSize: "14px" }}>Help</span>} */}
         </div>
       </Popover>
     </div>
