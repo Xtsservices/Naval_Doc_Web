@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -25,8 +25,6 @@ interface ProfileData {
 }
 
 const ProfileDetails: React.FC = () => {
-
-
   const user = useSelector((state: AppState) => state.currentUserData);
   console.log("user", user);
 
@@ -39,6 +37,14 @@ const ProfileDetails: React.FC = () => {
     mobileNo: "",
     emailId: "",
   });
+
+  // Load profile data from localStorage on initial mount
+  useEffect(() => {
+    const storedProfile = localStorage.getItem("profileData");
+    if (storedProfile) {
+      setProfileData(JSON.parse(storedProfile));
+    }
+  }, []);
 
   const handleEdit = () => {
     form.setFieldsValue({
@@ -60,7 +66,7 @@ const ProfileDetails: React.FC = () => {
   };
 
   const handleSubmit = (values: any) => {
-    setProfileData({
+    const newProfile: ProfileData = {
       name: values.name,
       gender: values.gender,
       dateOfBirth: values.dateOfBirth
@@ -68,7 +74,10 @@ const ProfileDetails: React.FC = () => {
         : "-",
       mobileNo: values.mobileNo,
       emailId: values.emailId,
-    });
+    };
+
+    setProfileData(newProfile);
+    localStorage.setItem("profileData", JSON.stringify(newProfile)); // Save to localStorage
     setIsEditing(false);
   };
 
@@ -79,12 +88,12 @@ const ProfileDetails: React.FC = () => {
     marginBottom: "20px",
     width: "100%",
     maxWidth: "100%",
-    overflow: "hidden", // Prevent content from overflowing
+    overflow: "hidden",
   };
 
   const titleStyle: React.CSSProperties = {
     color: "#2657BC",
-    fontSize: "clamp(18px, 4vw, 22px)", // Responsive font size
+    fontSize: "clamp(18px, 4vw, 22px)",
     fontWeight: 700,
     marginBottom: "20px",
     textAlign: "center",
@@ -97,24 +106,22 @@ const ProfileDetails: React.FC = () => {
 
   const labelStyle: React.CSSProperties = {
     color: "#333",
-    fontSize: "clamp(14px, 3.5vw, 16px)", // Responsive font size
+    fontSize: "clamp(14px, 3.5vw, 16px)",
     fontWeight: "bold",
     textAlign: "left",
     display: "block",
     wordBreak: "break-word",
-    marginBottom: "4px", // Add space for mobile stacked layout
+    marginBottom: "4px",
   };
 
   const valueStyle: React.CSSProperties = {
     color: "#666",
-    fontSize: "clamp(14px, 3.5vw, 16px)", // Responsive font size
+    fontSize: "clamp(14px, 3.5vw, 16px)",
     wordBreak: "break-word",
   };
 
-  // Enhanced responsive layout logic
   const getResponsiveLayout = () => {
     if (window.innerWidth < 576) {
-      // Mobile: Stack labels above values
       return {
         labelCol: { span: 24 },
         valueCol: { span: 24 },
@@ -122,7 +129,6 @@ const ProfileDetails: React.FC = () => {
         containerStyle: { padding: "12px" },
       };
     } else if (window.innerWidth < 768) {
-      // Small tablets
       return {
         labelCol: { span: 10 },
         valueCol: { span: 14 },
@@ -130,7 +136,6 @@ const ProfileDetails: React.FC = () => {
         containerStyle: { padding: "16px" },
       };
     } else {
-      // Desktop and large tablets
       return {
         labelCol: { span: 6 },
         valueCol: { span: 17 },
@@ -143,7 +148,6 @@ const ProfileDetails: React.FC = () => {
 
   const layout = getResponsiveLayout();
 
-  // Field definitions for both viewing and editing mode
   const profileFields = [
     {
       label: "Name",
@@ -235,7 +239,6 @@ const ProfileDetails: React.FC = () => {
         </Typography.Title>
 
         {!isEditing ? (
-          // View mode
           <>
             {profileFields.map((field, index) => (
               <Row key={index} style={fieldStyle} gutter={[8, 4]}>
@@ -243,7 +246,6 @@ const ProfileDetails: React.FC = () => {
                   <Text style={labelStyle}>{field.label}</Text>
                 </Col>
 
-                {/* Separator - only show on desktop */}
                 {layout.showSeparator && layout.separatorCol && (
                   <Col {...layout.separatorCol} style={{ textAlign: "center" }}>
                     <Text style={valueStyle}>:-</Text>
@@ -283,7 +285,6 @@ const ProfileDetails: React.FC = () => {
             </div>
           </>
         ) : (
-          // Edit mode
           <Form
             form={form}
             layout="vertical"
@@ -293,7 +294,6 @@ const ProfileDetails: React.FC = () => {
             {profileFields.map((field, index) => (
               <div key={index} style={{ marginBottom: "20px" }}>
                 {window.innerWidth < 768 ? (
-                  // Mobile/Tablet: Vertical layout
                   <div>
                     <Text style={{ ...labelStyle, marginBottom: "8px" }}>
                       {field.label}
@@ -301,7 +301,6 @@ const ProfileDetails: React.FC = () => {
                     {field.editField}
                   </div>
                 ) : (
-                  // Desktop: Horizontal layout
                   <Row gutter={[16, 8]} align="middle">
                     <Col {...layout.labelCol} style={{ paddingLeft: "4px" }}>
                       <Text style={labelStyle}>{field.label}</Text>
@@ -313,9 +312,7 @@ const ProfileDetails: React.FC = () => {
                       </Col>
                     )}
 
-                    <Col {...layout.valueCol}>
-                      {field.editField}
-                    </Col>
+                    <Col {...layout.valueCol}>{field.editField}</Col>
                   </Row>
                 )}
               </div>

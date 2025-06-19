@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { CartData, CartItem } from "../userModuleTypes/cartTypes";
 import UserHeader from "../userComponents/UserHeader";
 import { BASE_URL } from "../../constants/api";
-
 import { AppState } from "../../store/storeTypes";
 import { useSelector } from "react-redux";
 
@@ -36,7 +35,7 @@ const MyCart: React.FC = () => {
 
   useEffect(() => {
     loadCartData();
-  }, [updatingItems]);
+  }, []);
 
   const updateItemQuantity = async (cartItem: CartItem, newQuantity: number) => {
     try {
@@ -53,7 +52,21 @@ const MyCart: React.FC = () => {
           authorization: token ?? "",
         },
       });
-      await loadCartData();
+
+      // Update local state only
+      setCartData((prev) => {
+        if (!prev) return prev;
+        const updatedItems = prev.cartItems.map((item) =>
+          item.id === cartItem.id
+            ? {
+                ...item,
+                quantity: newQuantity,
+                total: newQuantity * item.price,
+              }
+            : item
+        );
+        return { ...prev, cartItems: updatedItems };
+      });
     } catch (err) {
       setError("Failed to update cart item");
       console.error(err);
@@ -67,7 +80,13 @@ const MyCart: React.FC = () => {
       if (!cartData) return;
       setUpdatingItems((prev) => [...prev, item.id]);
       await removeCartItem(cartData.id, typeof item.item?.id === "number" ? item.item.id : item.id);
-      await loadCartData();
+      setCartData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          cartItems: prev.cartItems.filter((i) => i.id !== item.id),
+        };
+      });
     } catch (err) {
       setError("Failed to remove cart item");
       console.error(err);
@@ -107,19 +126,14 @@ const MyCart: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: "#F4F6FB", minHeight: "100vh", paddingBottom: 400 }}>
-      {/* Header */}
       <UserHeader headerText="My Cart" />
 
-      {/* Loading */}
       {loading && (
         <div style={{ textAlign: "center", marginTop: 40, color: "#888" }}>
           Loading...
         </div>
       )}
 
-     
-
-      {/* If cart is empty */}
       {!loading && (!cartData || cartData.cartItems.length === 0) && (
         <div
           style={{
@@ -129,7 +143,6 @@ const MyCart: React.FC = () => {
             color: "#444",
           }}
         >
-         
           <h3 style={{ marginTop: 20, fontWeight: 500 }}>
             Your cart is empty
           </h3>
@@ -152,10 +165,8 @@ const MyCart: React.FC = () => {
         </div>
       )}
 
-      {/* Cart Items + Summary */}
       {!loading && cartData && cartData.cartItems.length > 0 && (
         <>
-          {/* Cart Items */}
           <div style={{ marginTop: 20, padding: "0 10px" }}>
             {cartData.cartItems.map((item) => (
               <div
@@ -170,6 +181,7 @@ const MyCart: React.FC = () => {
                   maxWidth: 600,
                   marginLeft: "auto",
                   marginRight: "auto",
+                  minHeight: 100, // fixes layout shift
                 }}
               >
                 <img
@@ -188,7 +200,6 @@ const MyCart: React.FC = () => {
                   }}
                 />
                 <div style={{ flex: 1, marginLeft: 14 }}>
-                  {/* Title + Remove */}
                   <div
                     style={{
                       display: "flex",
@@ -228,7 +239,6 @@ const MyCart: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Type */}
                   <div
                     style={{
                       display: "flex",
@@ -257,7 +267,6 @@ const MyCart: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Price & Total */}
                   <div
                     style={{
                       display: "flex",
@@ -284,7 +293,6 @@ const MyCart: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Quantity */}
                   <div
                     style={{
                       display: "flex",
@@ -343,7 +351,6 @@ const MyCart: React.FC = () => {
             ))}
           </div>
 
-          {/* Bill Summary - Fixed Bottom */}
           <div
             style={{
               position: "fixed",

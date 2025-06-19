@@ -17,7 +17,7 @@ import {
   Grid,
 } from "antd";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   canteenService,
   itemService,
@@ -55,6 +55,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const [loadingCanteens, setLoadingCanteens] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const screens = useBreakpoint();
+  const itemSectionRef = useRef<HTMLDivElement | null>(null);
+const [showItemError, setShowItemError] = useState(false);
+
 
   useEffect(() => {
     if (visible) {
@@ -121,45 +124,50 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   };
 
   const handleSubmit = async () => {
-    try {
-      await form.validateFields();
-      const values = form.getFieldsValue();
+  try {
+    await form.validateFields();
 
-      const menuItems = selectedItems.map((itemId) => {
-        return {
-          itemId,
-          minQuantity: 1, // Always fixed at 1
-          maxQuantity: values[`max_${itemId}`] || 10,
-        };
-      });
-
-      const startDate = values.startDate
-        ? dayjs(values.startDate).format("DD-MM-YYYY")
-        : undefined;
-      const endDate = values.endDate
-        ? dayjs(values.endDate).format("DD-MM-YYYY")
-        : undefined;
-
-      const menuData: CreateMenuPayload = {
-        menuConfigurationId: values.menuType,
-        canteenId: values.canteenId,
-        description: values.description,
-        items: menuItems,
-        startTime: startDate || "",
-        endTime: endDate || "",
-      };
-
-      setSubmitting(true);
-      await menuService.createMenuWithItems(menuData);
-      onSuccess();
-      resetForm();
-    } catch (error) {
-      toastError("Failed to create menu");
-      console.error("Error creating menu:", error);
-    } finally {
-      setSubmitting(false);
+    if (selectedItems.length === 0) {
+      setShowItemError(true);
+      toastError("Please select at least one item before submitting.");
+      setTimeout(() => {
+        itemSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+      return;
     }
-  };
+
+    setShowItemError(false);
+    const values = form.getFieldsValue();
+
+    const menuItems = selectedItems.map((itemId) => ({
+      itemId,
+      minQuantity: 1,
+      maxQuantity: values[`max_${itemId}`] || 10,
+    }));
+
+    const startDate = dayjs(values.startDate).format("DD-MM-YYYY");
+    const endDate = dayjs(values.endDate).format("DD-MM-YYYY");
+
+    const menuData: CreateMenuPayload = {
+      menuConfigurationId: values.menuType,
+      canteenId: values.canteenId,
+      description: values.description,
+      items: menuItems,
+      startTime: startDate,
+      endTime: endDate,
+    };
+
+    setSubmitting(true);
+    await menuService.createMenuWithItems(menuData);
+    onSuccess();
+    resetForm();
+  } catch (error) {
+    toastError("Failed to create menu");
+    console.error("Error creating menu:", error);
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const resetForm = () => {
     form.resetFields();

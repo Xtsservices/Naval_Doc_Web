@@ -35,7 +35,7 @@ const LayoutWrapper: React.FC<AppLayoutProps> = ({
           // marginRight: "-8px",
           display: "flex",
           flexDirection: "column",
-          height: "100vh",
+          // height: "100vh",
           overflowY: "auto",
         }}
       >
