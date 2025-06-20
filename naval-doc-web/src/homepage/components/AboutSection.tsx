@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import image from "../images/about us1.png";
+import image from "../images/aboutus1.png";
 import { useNavigate } from "react-router-dom";
 
 const About = styled.section`

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Row, Col, Typography } from "antd";
 import corpImage from "../images/Tiffin.png";
-import snakImage from "../images/Afternoon snack.png";
+import snakImage from "../images/AfternoonSnack.png"
 // import industrialImage from "../images/Morning snack.png";
 import healthcareImage from "../images/Lunch.png";
 
