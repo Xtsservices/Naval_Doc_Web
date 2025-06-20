@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Row, Col, Typography } from "antd";
 import corpImage from "../images/Tiffin.png";
-// import snakImage from "../images/Afternoon snack.png";
+import snakImage from "../images/Afternoon snack.png";
 // import industrialImage from "../images/Morning snack.png";
 import healthcareImage from "../images/Lunch.png";
 
@@ -31,7 +31,7 @@ const services = [
     title: "🍪 Afternoon Snacks",
     subtitle: "🕞 3:30 PM - 3:45 PM",
     description: "A light snack to recharge and refresh for the rest of the day’s activities.",
-    // image: snakImage,
+    image: snakImage,
   },
 ];
 

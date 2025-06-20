@@ -6,6 +6,7 @@ import { AppState } from '../../store/storeTypes';
 import {toast } from 'react-toastify'; // ✅ ADD
 import 'react-toastify/dist/ReactToastify.css'; // ✅ ADD
 
+
 const API_URL = 'https://iqtelephony.airtel.in/gateway/airtel-xchange/v2/execute/workflow';
 const COLORS = {
   CARD_1: '#e6f0ff',
@@ -125,7 +126,15 @@ const CallCenter: React.FC = () => {
     marginBottom: '16px',
     cursor: 'pointer',
     boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   });
+
+  const textWrapperStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+  };
 
   const optionTitleStyle: React.CSSProperties = {
     fontSize: '16px',
@@ -140,6 +149,12 @@ const CallCenter: React.FC = () => {
     margin: 0,
   };
 
+  const callIconStyle: React.CSSProperties = {
+    fontSize: '22px',
+    // color: '#0033a0',
+    color: '#28a745',
+  };
+
   return (
     <div style={containerStyle}>
       {location.pathname.includes('/user/contact-support') && (
@@ -150,18 +165,27 @@ const CallCenter: React.FC = () => {
         <div style={cardTitleStyle}>Call Options</div>
 
         <div style={optionBoxStyle(COLORS.CARD_1)} onClick={() => handleApiCall(1)}>
-          <div style={optionTitleStyle}>Call Option 1</div>
-          <p style={optionSubtitleStyle}>Customer Support</p>
+          <div style={textWrapperStyle}>
+            <div style={optionTitleStyle}>Call Option 1</div>
+            <p style={optionSubtitleStyle}>Customer Support</p>
+          </div>
+          <span style={callIconStyle}>📞</span>
         </div>
 
         <div style={optionBoxStyle(COLORS.CARD_2)} onClick={() => handleApiCall(2)}>
-          <div style={optionTitleStyle}>Call Option 2</div>
-          <p style={optionSubtitleStyle}>Technical Support</p>
+          <div style={textWrapperStyle}>
+            <div style={optionTitleStyle}>Call Option 2</div>
+            <p style={optionSubtitleStyle}>Technical Support</p>
+          </div>
+          <span style={callIconStyle}>📞</span>
         </div>
 
         <div style={optionBoxStyle(COLORS.CARD_3)} onClick={() => handleApiCall(3)}>
-          <div style={optionTitleStyle}>Call Option 3</div>
-          <p style={optionSubtitleStyle}>General Inquiry</p>
+          <div style={textWrapperStyle}>
+            <div style={optionTitleStyle}>Call Option 3</div>
+            <p style={optionSubtitleStyle}>General Inquiry</p>
+          </div>
+          <span style={callIconStyle}>📞</span>
         </div>
       </div>
     </div>

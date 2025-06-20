@@ -270,23 +270,37 @@ const CanteenList: React.FC = () => {
                     </Typography.Title>
                     
                     <Button
-                      type="primary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCanteenClick(
-                          canteen.id,
-                          canteen?.name?.charAt(0).toUpperCase() +
-                            canteen.name.slice(1)
-                        );
-                      }}
-                      style={{
-                        width: "100%",
-                        height: window.innerWidth <= 480 ? "36px" : "40px",
-                        fontSize: window.innerWidth <= 480 ? "12px" : "14px",
-                      }}
-                    >
-                      {window.innerWidth <= 480 ? "Go to Canteen Dashboard" : "Go to Canteen Dashboard"}
-                    </Button>
+  type="primary"
+  onClick={(e) => {
+    e.stopPropagation();
+    handleCanteenClick(
+      canteen.id,
+      canteen?.name?.charAt(0).toUpperCase() +
+        canteen.name.slice(1)
+    );
+  }}
+  style={{
+    width: "100%",
+    height:
+      window.innerWidth <= 480
+        ? "36px"
+        : window.innerWidth <= 768
+        ? "38px"
+        : "40px",
+    fontSize:
+      window.innerWidth <= 480
+        ? "12px"
+        : window.innerWidth <= 768
+        ? "13px"
+        : "14px",
+    whiteSpace: "normal",
+    padding: "0 8px",
+    lineHeight: "1.2",
+  }}
+>
+  Go to Canteen Dashboard
+</Button>
+
                   </div>
                 </Card>
               </Col>
