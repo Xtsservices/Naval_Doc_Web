@@ -57,6 +57,8 @@ export interface MenuItem {
   
   export interface CartData {
     id: number;
+    cartId: number;
+    itemId: number;
     totalAmount: number;
     cartItems: CartItem[];
     menuConfiguration: {

@@ -74,12 +74,15 @@ const MyCart: React.FC = () => {
       setUpdatingItems((prev) => prev.filter((id) => id !== cartItem.id));
     }
   };
-
+console.log("cartDatatest==",cartData)
   const handleRemoveItem = async (item: CartItem) => {
+    console.log("handleRemoveItem================",item)
     try {
       if (!cartData) return;
       setUpdatingItems((prev) => [...prev, item.id]);
-      await removeCartItem(cartData.id, typeof item.item?.id === "number" ? item.item.id : item.id);
+    console.log("handleRemoveItem===========item.cartId,  item.id=====",item.cartId,  item.id)
+
+      await removeCartItem(Number(item.cartId), Number(item.itemId));
       setCartData((prev) => {
         if (!prev) return prev;
         return {
