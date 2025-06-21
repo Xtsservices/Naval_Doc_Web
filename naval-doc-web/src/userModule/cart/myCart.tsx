@@ -37,7 +37,12 @@ const MyCart: React.FC = () => {
     loadCartData();
   }, []);
 
-  const updateItemQuantity = async (cartItem: CartItem, newQuantity: number) => {
+  const updateItemQuantity = async (
+    cartItem: CartItem,
+    newQuantity: number
+  ) => {
+    console.log("first====================", cartItem, newQuantity);
+
     try {
       setUpdatingItems((prev) => [...prev, cartItem.id]);
       const body = {
@@ -45,28 +50,32 @@ const MyCart: React.FC = () => {
         quantity: newQuantity,
         cartId: cartData?.id,
       };
+
       const token = localStorage.getItem("Token");
-      await axios.post(`${BASE_URL}/cart/updateCartItem`, body, {
+      const resp = await axios.post(`${BASE_URL}/cart/updateCartItem`, body, {
         headers: {
           "Content-Type": "application/json",
           authorization: token ?? "",
         },
       });
+      console.log("body===========res=========", resp);
 
-      // Update local state only
-      setCartData((prev) => {
-        if (!prev) return prev;
-        const updatedItems = prev.cartItems.map((item) =>
-          item.id === cartItem.id
-            ? {
-                ...item,
-                quantity: newQuantity,
-                total: newQuantity * item.price,
-              }
-            : item
-        );
-        return { ...prev, cartItems: updatedItems };
-      });
+      if (resp?.data?.data) {
+        // Update local state only
+        setCartData((prev) => {
+          if (!prev) return prev;
+          const updatedItems = prev.cartItems.map((item) =>
+            item.id === cartItem.id
+              ? {
+                  ...item,
+                  quantity: newQuantity,
+                  total: newQuantity * item.price,
+                }
+              : item
+          );
+          return { ...prev, cartItems: updatedItems };
+        });
+      }
     } catch (err) {
       setError("Failed to update cart item");
       console.error(err);
@@ -74,13 +83,17 @@ const MyCart: React.FC = () => {
       setUpdatingItems((prev) => prev.filter((id) => id !== cartItem.id));
     }
   };
-console.log("cartDatatest==",cartData)
+  console.log("cartDatatest==", cartData);
   const handleRemoveItem = async (item: CartItem) => {
-    console.log("handleRemoveItem================",item)
+    console.log("handleRemoveItem================", item);
     try {
       if (!cartData) return;
       setUpdatingItems((prev) => [...prev, item.id]);
-    console.log("handleRemoveItem===========item.cartId,  item.id=====",item.cartId,  item.id)
+      console.log(
+        "handleRemoveItem===========item.cartId,  item.id=====",
+        item.cartId,
+        item.id
+      );
 
       await removeCartItem(Number(item.cartId), Number(item.itemId));
       setCartData((prev) => {
@@ -128,7 +141,13 @@ console.log("cartDatatest==",cartData)
   const totalAmount = subtotal + gstAndCharges + platformFee;
 
   return (
-    <div style={{ backgroundColor: "#F4F6FB", minHeight: "100vh", paddingBottom: 400 }}>
+    <div
+      style={{
+        backgroundColor: "#F4F6FB",
+        minHeight: "100vh",
+        paddingBottom: 400,
+      }}
+    >
       <UserHeader headerText="My Cart" />
 
       {loading && (
@@ -146,9 +165,7 @@ console.log("cartDatatest==",cartData)
             color: "#444",
           }}
         >
-          <h3 style={{ marginTop: 20, fontWeight: 500 }}>
-            Your cart is empty
-          </h3>
+          <h3 style={{ marginTop: 20, fontWeight: 500 }}>Your cart is empty</h3>
           <button
             onClick={() => navigation("/user/select-menu")}
             style={{
@@ -316,17 +333,27 @@ console.log("cartDatatest==",cartData)
                         cursor: item.quantity === 1 ? "not-allowed" : "pointer",
                         opacity: item.quantity === 1 ? 0.5 : 1,
                       }}
-                      disabled={item.quantity === 1 || updatingItems.includes(item.id)}
+                      disabled={
+                        item.quantity === 1 || updatingItems.includes(item.id)
+                      }
                       onClick={() =>
                         item.quantity > 1 &&
                         updateItemQuantity(item, item.quantity - 1)
                       }
-                      title={updatingItems.includes(item.id) ? "Updating..." : "Decrease quantity"}
+                      title={
+                        updatingItems.includes(item.id)
+                          ? "Updating..."
+                          : "Decrease quantity"
+                      }
                     >
                       -
                     </button>
                     <span
-                      style={{ margin: "0 16px", fontWeight: "bold", color: "#222" }}
+                      style={{
+                        margin: "0 16px",
+                        fontWeight: "bold",
+                        color: "#222",
+                      }}
                     >
                       {item.quantity}
                     </span>
@@ -343,8 +370,14 @@ console.log("cartDatatest==",cartData)
                         cursor: "pointer",
                       }}
                       disabled={updatingItems.includes(item.id)}
-                      onClick={() => updateItemQuantity(item, item.quantity + 1)}
-                      title={updatingItems.includes(item.id) ? "Updating..." : "Increase quantity"}
+                      onClick={() =>
+                        updateItemQuantity(item, item.quantity + 1)
+                      }
+                      title={
+                        updatingItems.includes(item.id)
+                          ? "Updating..."
+                          : "Increase quantity"
+                      }
                     >
                       +
                     </button>
