@@ -82,9 +82,10 @@ export const canteenService = {
 
   // Update canteen
   updateCanteen: async (canteenId: number, canteenData: FormData) => {
+    console.log("canteenData",canteenData)
     try {
-      const response = await apiClient.put(
-        `/canteen/${canteenId}`,
+      const response = await apiClient.post(
+        `/canteen/updateCanteen`,
         canteenData,
         {
           headers: {

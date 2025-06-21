@@ -33,6 +33,7 @@ const CanteenList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [countsData, setCountsData] = React.useState<any>([]);
+  const [selectedCanteen, setSelectedCanteen] = useState<CanteenProps | null>(null);
 
   useEffect(() => {
     fetchCanteens();
@@ -83,15 +84,23 @@ const CanteenList: React.FC = () => {
   };
 
   const handleAddCanteen = () => {
+    setSelectedCanteen(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditCanteen = (canteen: CanteenProps) => {
+    setSelectedCanteen(canteen);
     setIsModalOpen(true);
   };
 
   const handleCancelModal = () => {
     setIsModalOpen(false);
+    setSelectedCanteen(null);
   };
 
   const handleSubmitCanteen = (values: any) => {
     console.log("Submitted values:", values);
+    setSelectedCanteen(null);
   };
 
   const EmptyState = () => (
@@ -207,7 +216,7 @@ const CanteenList: React.FC = () => {
                 <Card
                   hoverable
                   style={{ 
-                    height: window.innerWidth <= 480 ? "280px" : "320px",
+                    height: window.innerWidth <= 480 ? "320px" : "360px",
                     display: "flex",
                     flexDirection: "column",
                     cursor: "pointer",
@@ -269,38 +278,66 @@ const CanteenList: React.FC = () => {
                         : ""}
                     </Typography.Title>
                     
-                    <Button
-  type="primary"
-  onClick={(e) => {
-    e.stopPropagation();
-    handleCanteenClick(
-      canteen.id,
-      canteen?.name?.charAt(0).toUpperCase() +
-        canteen.name.slice(1)
-    );
-  }}
-  style={{
-    width: "100%",
-    height:
-      window.innerWidth <= 480
-        ? "36px"
-        : window.innerWidth <= 768
-        ? "38px"
-        : "40px",
-    fontSize:
-      window.innerWidth <= 480
-        ? "12px"
-        : window.innerWidth <= 768
-        ? "13px"
-        : "14px",
-    whiteSpace: "normal",
-    padding: "0 8px",
-    lineHeight: "1.2",
-  }}
->
-  Go to Canteen Dashboard
-</Button>
-
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <Button
+                        type="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCanteenClick(
+                            canteen.id,
+                            canteen?.name?.charAt(0).toUpperCase() +
+                              canteen.name.slice(1)
+                          );
+                        }}
+                        style={{
+                          width: "100%",
+                          height:
+                            window.innerWidth <= 480
+                              ? "36px"
+                              : window.innerWidth <= 768
+                              ? "38px"
+                              : "40px",
+                          fontSize:
+                            window.innerWidth <= 480
+                              ? "12px"
+                              : window.innerWidth <= 768
+                              ? "13px"
+                              : "14px",
+                          whiteSpace: "normal",
+                          padding: "0 8px",
+                          lineHeight: "1.2",
+                        }}
+                      >
+                        Go to Canteen Dashboard
+                      </Button>
+                      <Button
+                        type="default"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditCanteen(canteen);
+                        }}
+                        style={{
+                          width: "100%",
+                          height:
+                            window.innerWidth <= 480
+                              ? "36px"
+                              : window.innerWidth <= 768
+                              ? "38px"
+                              : "40px",
+                          fontSize:
+                            window.innerWidth <= 480
+                              ? "12px"
+                              : window.innerWidth <= 768
+                              ? "13px"
+                              : "14px",
+                          whiteSpace: "normal",
+                          padding: "0 8px",
+                          lineHeight: "1.2",
+                        }}
+                      >
+                        Edit Canteen
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               </Col>
@@ -313,6 +350,7 @@ const CanteenList: React.FC = () => {
           onCancel={handleCancelModal}
           onSubmit={handleSubmitCanteen}
           onSuccess={fetchCanteens}
+          initialData={selectedCanteen}
         />
       </Content>
     </Layout>

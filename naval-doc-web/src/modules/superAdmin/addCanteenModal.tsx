@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Form,
@@ -19,11 +19,24 @@ import { toastError, toastSuccess } from "../../components/common/toasterMessage
 const { Option } = Select;
 const { Text } = Typography;
 
+interface CanteenProps {
+  id: number;
+  name: string;
+  location?: string;
+  image: string;
+  code: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  adminMobile?: string;
+}
+
 interface AddCanteenModalProps {
   isOpen: boolean;
   onCancel: () => void;
   onSubmit: (values: any) => void;
   onSuccess: () => void;
+  initialData?: CanteenProps | null;
 }
 
 const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
@@ -31,43 +44,73 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
   onCancel,
   onSubmit,
   onSuccess,
+  initialData,
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
+  const isEditMode = !!initialData;
+
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      form.setFieldsValue({
+        canteenName: initialData.name,
+        canteenCode: initialData.code,
+        firstName: initialData.firstName || "",
+        lastName: initialData.lastName || "",
+        emailId: initialData.email || "",
+        mobileNumber: initialData.adminMobile || "",
+        canteenImage: initialData.image
+          ? [{ uid: "-1", name: "image", status: "done", url: initialData.image }]
+          : [],
+      });
+      setFileList(
+        initialData.image
+          ? [{ uid: "-1", name: "image", status: "done", url: initialData.image }]
+          : []
+      );
+    } else {
+      form.resetFields();
+      setFileList([]);
+    }
+  }, [initialData, isEditMode, form]);
 
   const handleOk = async () => {
-    console.log("first",100)
     try {
       const values = await form.validateFields();
       setLoading(true);
       const formData = new FormData();
-      formData.append("canteenName", values.canteenName.trim());
-      formData.append("canteenCode", values.canteenCode.trim());
-      formData.append("adminFirstName", values.firstName.trim());
-      formData.append("adminLastName", values.lastName.trim());
-      formData.append("adminEmail", values.emailId.trim());
-      formData.append("adminMobile", values.mobileNumber.trim());
-      if (values.dob) {
-        formData.append("adminDob", values.dob.format("YYYY-MM-DD"));
+
+      if (!isEditMode) {
+        formData.append("canteenName", values.canteenName.trim());
+        formData.append("canteenCode", values.canteenCode.trim());
       }
-      if (values.gender) {
-        formData.append("adminGender", values.gender);
-      }
+      formData.append("firstName", values.firstName.trim());
+      formData.append("lastName", values.lastName.trim());
+      formData.append("email", values.emailId.trim());
+      formData.append("mobile", values.mobileNumber.trim());
+     
       if (fileList.length > 0 && fileList[0].originFileObj) {
         formData.append("canteenImage", fileList[0].originFileObj);
       }
 
-      await canteenService.createCanteen(formData);
-      toastSuccess("Canteen Added Successfully!!");
+      if (isEditMode && initialData) {
+        formData.append("canteenId", initialData.id.toString());
+        await canteenService.updateCanteen(initialData.id, formData);
+        toastSuccess("Canteen Updated Successfully!!");
+      } else {
+        await canteenService.createCanteen(formData);
+        toastSuccess("Canteen Added Successfully!!");
+      }
+
       form.resetFields();
       setFileList([]);
       onSubmit(values);
       onSuccess();
       onCancel();
     } catch (error) {
-      toastError("Failed to add canteen!!");
-      console.error("Failed to add canteen:", error);
+      toastError(isEditMode ? "Failed to update canteen!" : "Failed to add canteen!");
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -82,11 +125,10 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     height: "40px",
   };
 
-  const handleFileChange = async({ fileList }: any) => {
-    console.log("sample enter")
+  const handleFileChange = async ({ fileList }: any) => {
     setFileList(fileList);
     await form.validateFields();
-     return Promise.resolve();
+    return Promise.resolve();
   };
 
   const validateFileUpload = () => {
@@ -123,12 +165,10 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
     return Promise.resolve();
   };
 
-  
-
   return (
     <Modal
       className="add-canteen-modal"
-      title="Add Canteen"
+      title={isEditMode ? "Edit Canteen" : "Add Canteen"}
       open={isOpen}
       onCancel={onCancel}
       width={920}
@@ -141,7 +181,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
       <Form
         form={form}
         layout="vertical"
-        name="add_canteen_form"
+        name="canteen_form"
         validateTrigger={["onBlur", "onChange"]}
       >
         <Row gutter={24}>
@@ -149,34 +189,46 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             <Form.Item
               name="canteenName"
               label="Canteen Name"
-              rules={[
-                { required: true, message: "Please enter canteen name" },
-                {
-                  min: 3,
-                  message: "Canteen name must be at least 3 characters",
-                },
-                {
-                  max: 50,
-                  message: "Canteen name cannot exceed 50 characters",
-                },
-                {
-                  whitespace: true,
-                  message: "Canteen name cannot be empty spaces",
-                },
-              ]}
+              rules={
+                !isEditMode
+                  ? [
+                      { required: true, message: "Please enter canteen name" },
+                      {
+                        min: 3,
+                        message: "Canteen name must be at least 3 characters",
+                      },
+                      {
+                        max: 50,
+                        message: "Canteen name cannot exceed 50 characters",
+                      },
+                      {
+                        whitespace: true,
+                        message: "Canteen name cannot be empty spaces",
+                      },
+                    ]
+                  : []
+              }
               style={formItemStyle}
             >
-              <Input placeholder="Enter Canteen name" style={inputStyle} />
+              <Input
+                placeholder="Enter Canteen name"
+                style={inputStyle}
+                disabled={isEditMode}
+              />
             </Form.Item>
           </Col>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="canteenCode"
               label="Canteen CODE"
-              rules={[{ validator: validateCanteenCode }]}
+              rules={!isEditMode ? [{ validator: validateCanteenCode }] : []}
               style={formItemStyle}
             >
-              <Input placeholder="Enter Canteen Code" style={inputStyle} />
+              <Input
+                placeholder="Enter Canteen Code"
+                style={inputStyle}
+                disabled={isEditMode}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -210,39 +262,26 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               label="Admin LastName"
               rules={[
                 { required: true, message: "Please enter last name" },
-                { min: 2, message: "Admin Last name must be at least 2 characters" },
-                { max: 30, message: "Admin Last name cannot exceed 30 characters" },
+                { min: 2, message: "Last name must be at least 2 characters" },
+                { max: 30, message: "Last name cannot exceed 30 characters" },
                 {
                   pattern: /^[A-Za-z\s]+$/,
-                  message: "Admin Last name should contain only letters",
+                  message: "Last name should contain only letters",
                 },
                 {
                   whitespace: true,
-                  message: "Admin Last name cannot be empty spaces",
+                  message: "Last name cannot be empty spaces",
                 },
               ]}
               style={formItemStyle}
             >
-              <Input placeholder="Enter Admin Last Name" style={inputStyle} />
+              <Input placeholder="Enter Last Name" style={inputStyle} />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={24}>
-          <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
-            <Form.Item
-              name="gender"
-              label="Gender"
-              rules={[{ required: true, message: "Please select gender" }]}
-              style={formItemStyle}
-            >
-              <Select placeholder="Select Gender" style={inputStyle}>
-                <Option value="male">Male</Option>
-                <Option value="female">Female</Option>
-                <Option value="other">Other</Option>
-              </Select>
-            </Form.Item>
-          </Col>
+          
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="mobileNumber"
@@ -271,9 +310,6 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               <Input placeholder="Enter Mobile Number" style={inputStyle} />
             </Form.Item>
           </Col>
-        </Row>
-
-        <Row gutter={24}>
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="emailId"
@@ -289,6 +325,10 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               <Input placeholder="Enter Email ID" style={inputStyle} />
             </Form.Item>
           </Col>
+        </Row>
+
+        <Row gutter={24}>
+          
           <Col xs={24} sm={12} style={{ marginBottom: "16px" }}>
             <Form.Item
               name="canteenImage"
@@ -307,9 +347,8 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
                     message.error("You can only upload image files!");
                   }
                   const isLt2M = file.size / 1024 / 1024 < 2;
-                  console.log("isLt2M",isLt2M)
                   if (!isLt2M) {
-                    message.error("Image must be smaller than 2MB!===");
+                    message.error("Image must be smaller than 2MB!");
                   }
                   return false;
                 }}
@@ -322,9 +361,8 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={24}></Row>
 
-        <Row justify="center" style={{ marginTop: "6px",marginBottom:"-19px" }}>
+        <Row justify="center" style={{ marginTop: "6px", marginBottom: "-19px" }}>
           <Col xs={24} sm={12} md={8}>
             <Button
               type="primary"
@@ -333,7 +371,7 @@ const AddCanteenModal: React.FC<AddCanteenModalProps> = ({
               style={{ height: "40px" }}
               disabled={loading}
             >
-              {loading ? "Processing..." : "Confirm"}
+              {loading ? "Processing..." : isEditMode ? "Update" : "Confirm"}
             </Button>
           </Col>
         </Row>

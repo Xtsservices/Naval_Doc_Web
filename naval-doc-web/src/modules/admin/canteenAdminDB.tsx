@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import menuImage from "../../assets/images/menu.jpg";
 import ordersImage from "../../assets/images/orders.jpg";
-import itemsImage from "../../assets/images/items.jpg";
 import { Card, Col, Row, Space, Typography } from "antd";
 import BackHeader from "../../components/common/backHeader";
 const { Title } = Typography;
@@ -9,27 +8,21 @@ const { Title } = Typography;
 const CanteenAdminDB = () => {
   const navigate = useNavigate();
   const route = useParams();
-  console.log(route, "routee");
 
   const featureCards = [
     { title: "Menu", image: menuImage },
     { title: "Orders", image: ordersImage },
-    { title: "Users", image: itemsImage },
   ];
 
   const handleCardClick = (cardName: string) => {
-    if (cardName === "Canteens") {
-      navigate("/canteens-dashboard");
-    } else if (cardName === "Items") {
-      navigate("/items-list");
-    } else if (cardName === "Menu") {
-      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/menu`);
-    } else if (cardName === "Users") {
+    if (cardName === "Menu") {
       navigate(
-        `/canteens-list/canteen-dashboard/${route?.canteenId}/users-list`
+        `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/menu`
       );
     } else if (cardName === "Orders") {
-      navigate(`/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/orders`);
+      navigate(
+        `/canteens-list/canteen-dashboard/${route?.canteenId}/${route?.canteenName}/orders`
+      );
     }
   };
 
@@ -38,22 +31,35 @@ const CanteenAdminDB = () => {
       <BackHeader
         path="/canteens-list"
         title={
-          route?.canteenName
-            ? `${route.canteenName}`
-            : "Canteen Dashboard"
+          route?.canteenName ? `${route.canteenName}` : "Canteen Dashboard"
         }
         styles={{
           marginLeft: "22px",
         }}
       />
 
-      <div style={{ padding: "20px 57px", paddingBottom: 0, paddingTop: 0 }}>
+      <div
+        style={{
+          padding: "20px 16px",
+          paddingBottom: 0,
+          paddingTop: 0,
+          maxWidth: 1200,
+          margin: "0 auto",
+        }}
+      >
         <Row
-          gutter={[16, 16]}
-          style={{ display: "flex", justifyContent: "space-between" }}
+          gutter={[24, 24]}
+          justify="center"
         >
           {featureCards.map((feature, index) => (
-            <Col xs={24} sm={12} md={6} key={index}>
+            <Col
+              key={index}
+              xs={24}
+              sm={12}
+              md={8}
+              lg={6}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
               <Space
                 direction="vertical"
                 style={{ width: "100%", textAlign: "center" }}
@@ -65,15 +71,21 @@ const CanteenAdminDB = () => {
                     padding: 0,
                     overflow: "hidden",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    height: "288px",
+                    width: "100%",
+                    maxWidth: 300,
+                    minHeight: 220,
                   }}
-                  styles={{ body: { padding: "0px" } }}
+                  bodyStyle={{ padding: 0 }}
                   cover={
                     <div
                       style={{
-                        height: "100%",
+                        height: "180px",
                         width: "100%",
                         overflow: "hidden",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#f5f5f5",
                       }}
                     >
                       <img
