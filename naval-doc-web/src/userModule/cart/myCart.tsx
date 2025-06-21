@@ -103,6 +103,8 @@ const MyCart: React.FC = () => {
           cartItems: prev.cartItems.filter((i) => i.id !== item.id),
         };
       });
+      //FETECH CART DATA AGAIN
+      await loadCartData();
     } catch (err) {
       setError("Failed to remove cart item");
       console.error(err);
